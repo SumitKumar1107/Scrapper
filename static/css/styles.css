@@ -121,6 +121,32 @@ main {
     min-width: 400px;
 }
 
+/* Plotly Download Button Styling */
+.modebar-btn[data-title="Download plot as a png"] {
+    background-color: #0d6efd !important;
+    border-radius: 50% !important;
+    width: 32px !important;
+    height: 32px !important;
+    padding: 6px !important;
+    margin: 4px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+.modebar-btn[data-title="Download plot as a png"] svg {
+    fill: #ffffff !important;
+}
+
+.modebar-btn[data-title="Download plot as a png"]:hover {
+    background-color: #0b5ed7 !important;
+}
+
+.modebar-group {
+    background: transparent !important;
+}
+
 /* Charts Section - cards fit content */
 #charts-section .card {
     display: inline-block;

@@ -3,44 +3,47 @@
  * Handles Plotly chart rendering for financial data
  */
 const ChartsModule = (function() {
-    // Chart configuration
+    // Chart configuration - only show download PNG button
     const chartConfig = {
         responsive: true,
         displayModeBar: true,
-        modeBarButtonsToRemove: ['lasso2d', 'select2d', 'autoScale2d'],
+        modeBarButtons: [['toImage']],
         displaylogo: false,
         toImageButtonOptions: {
             format: 'png',
             filename: 'financial_chart',
-            height: 600,
-            width: 1200,
+            height: 700,
+            width: 1400,
             scale: 2
         }
     };
 
     // Base layout configuration
     const baseLayout = {
-        margin: { t: 40, r: 50, b: 100, l: 80 },
+        margin: { t: 50, r: 60, b: 120, l: 100 },
         showlegend: true,
         legend: {
             orientation: 'h',
-            y: -0.25,
+            y: -0.2,
             x: 0.5,
-            xanchor: 'center'
+            xanchor: 'center',
+            font: { color: '#333333' }
         },
         hovermode: 'x unified',
-        paper_bgcolor: 'rgba(0,0,0,0)',
-        plot_bgcolor: 'rgba(0,0,0,0)',
+        paper_bgcolor: '#ffffff',
+        plot_bgcolor: '#ffffff',
         font: {
             family: 'system-ui, -apple-system, sans-serif',
-            size: 12
+            size: 12,
+            color: '#333333'
         },
         xaxis: {
             showgrid: false,
             showline: true,
             linecolor: '#dee2e6',
             automargin: true,
-            tickfont: { size: 11 }
+            tickfont: { size: 11, color: '#333333' },
+            title: { font: { color: '#333333' } }
         },
         yaxis: {
             showgrid: true,
@@ -49,7 +52,9 @@ const ChartsModule = (function() {
             linecolor: '#dee2e6',
             zeroline: true,
             zerolinecolor: '#dee2e6',
-            automargin: true
+            automargin: true,
+            tickfont: { color: '#333333' },
+            title: { font: { color: '#333333' } }
         },
         bargap: 0.3,
         bargroupgap: 0.1
