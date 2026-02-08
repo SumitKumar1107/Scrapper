@@ -153,8 +153,33 @@ const ChartsModule = (function() {
             return;
         }
 
+        const traces = [];
+
+        // Calculate Gross Margin % = (Sales - Material Cost) / Sales * 100
+        const grossMarginPercent = data.periods.map((_, i) => {
+            if (data.sales[i] && data.material_cost && data.material_cost[i] != null && data.sales[i] !== 0) {
+                return ((data.sales[i] - data.material_cost[i]) / data.sales[i]) * 100;
+            }
+            return null;
+        });
+
+        // Only add Gross Margin trace if we have valid data
+        const hasGrossMargin = grossMarginPercent.some(v => v !== null);
+        if (hasGrossMargin) {
+            traces.push({
+                x: data.periods,
+                y: grossMarginPercent,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Gross Margin %',
+                line: { color: colors.primary, width: 2 },
+                marker: { size: 8 },
+                hovertemplate: '<b>%{x}</b><br>Gross Margin: %{y:.1f}%<extra></extra>'
+            });
+        }
+
         // Operating Profit Margin
-        const opmTrace = {
+        traces.push({
             x: data.periods,
             y: data.opm_percent,
             type: 'scatter',
@@ -163,7 +188,7 @@ const ChartsModule = (function() {
             line: { color: colors.success, width: 2 },
             marker: { size: 8 },
             hovertemplate: '<b>%{x}</b><br>OPM: %{y:.1f}%<extra></extra>'
-        };
+        });
 
         // Calculate Net Profit Margin
         const npmPercent = data.periods.map((_, i) => {
@@ -173,7 +198,7 @@ const ChartsModule = (function() {
             return null;
         });
 
-        const npmTrace = {
+        traces.push({
             x: data.periods,
             y: npmPercent,
             type: 'scatter',
@@ -182,7 +207,7 @@ const ChartsModule = (function() {
             line: { color: colors.purple, width: 2 },
             marker: { size: 8 },
             hovertemplate: '<b>%{x}</b><br>NPM: %{y:.1f}%<extra></extra>'
-        };
+        });
 
         const layout = {
             ...baseLayout,
@@ -198,7 +223,7 @@ const ChartsModule = (function() {
             }
         };
 
-        Plotly.newPlot(containerId, [opmTrace, npmTrace], layout, chartConfig);
+        Plotly.newPlot(containerId, traces, layout, chartConfig);
     }
 
     /**

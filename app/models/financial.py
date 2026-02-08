@@ -9,6 +9,7 @@ class FinancialData(BaseModel):
     periods: List[str] = []
     sales: List[Optional[float]] = []
     expenses: List[Optional[float]] = []
+    material_cost: List[Optional[float]] = []  # For Gross Margin calculation
     operating_profit: List[Optional[float]] = []
     opm_percent: List[Optional[float]] = []
     other_income: List[Optional[float]] = []

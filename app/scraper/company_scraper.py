@@ -233,6 +233,7 @@ class CompanyScraper(BaseScraper):
             periods=[],
             sales=[],
             expenses=[],
+            material_cost=[],
             operating_profit=[],
             opm_percent=[],
             other_income=[],
