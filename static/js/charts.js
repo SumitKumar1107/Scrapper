@@ -378,7 +378,7 @@ const ChartsModule = (function() {
                 marker: { color: '#6c757d' },
                 hovertemplate: data.periods.map((period, i) => {
                     const pct = data.sales[i] ? ((data.material_cost[i] || 0) / data.sales[i] * 100).toFixed(1) : 0;
-                    return `<b>${period}</b><br>Material Cost: %{y:,.0f} Cr<br><b>${pct}% of Sales</b><extra></extra>`;
+                    return `Material Cost: %{y:,.0f} Cr (<b>${pct}%</b>)<extra></extra>`;
                 })
             });
         }
@@ -393,7 +393,7 @@ const ChartsModule = (function() {
                 marker: { color: '#fd7e14' },
                 hovertemplate: data.periods.map((period, i) => {
                     const pct = data.sales[i] ? (otherExpenses[i] / data.sales[i] * 100).toFixed(1) : 0;
-                    return `<b>${period}</b><br>Operating Expenses: ${otherExpenses[i].toFixed(0)} Cr<br><b>${pct}% of Sales</b><extra></extra>`;
+                    return `Operating Expenses: ${otherExpenses[i].toFixed(0)} Cr (<b>${pct}%</b>)<extra></extra>`;
                 })
             });
         }
@@ -408,7 +408,7 @@ const ChartsModule = (function() {
                 marker: { color: '#6f42c1' },
                 hovertemplate: data.periods.map((period, i) => {
                     const pct = data.sales[i] ? ((data.depreciation[i] || 0) / data.sales[i] * 100).toFixed(1) : 0;
-                    return `<b>${period}</b><br>Depreciation: %{y:,.0f} Cr<br><b>${pct}% of Sales</b><extra></extra>`;
+                    return `Depreciation: %{y:,.0f} Cr (<b>${pct}%</b>)<extra></extra>`;
                 })
             });
         }
@@ -423,7 +423,7 @@ const ChartsModule = (function() {
                 marker: { color: '#dc3545' },
                 hovertemplate: data.periods.map((period, i) => {
                     const pct = data.sales[i] ? ((data.interest[i] || 0) / data.sales[i] * 100).toFixed(1) : 0;
-                    return `<b>${period}</b><br>Interest: %{y:,.0f} Cr<br><b>${pct}% of Sales</b><extra></extra>`;
+                    return `Interest: %{y:,.0f} Cr (<b>${pct}%</b>)<extra></extra>`;
                 })
             });
         }
@@ -438,7 +438,7 @@ const ChartsModule = (function() {
                 marker: { color: '#ffc107' },
                 hovertemplate: data.periods.map((period, i) => {
                     const pct = data.sales[i] ? (taxAmount[i] / data.sales[i] * 100).toFixed(1) : 0;
-                    return `<b>${period}</b><br>Tax: ${taxAmount[i].toFixed(0)} Cr<br><b>${pct}% of Sales</b><extra></extra>`;
+                    return `Tax: ${taxAmount[i].toFixed(0)} Cr (<b>${pct}%</b>)<extra></extra>`;
                 })
             });
         }
@@ -453,7 +453,7 @@ const ChartsModule = (function() {
                 marker: { color: '#198754' },
                 hovertemplate: data.periods.map((period, i) => {
                     const pct = data.sales[i] ? ((data.net_profit[i] || 0) / data.sales[i] * 100).toFixed(1) : 0;
-                    return `<b>${period}</b><br>Net Profit: %{y:,.0f} Cr<br><b>${pct}% of Sales</b><extra></extra>`;
+                    return `Net Profit: %{y:,.0f} Cr (<b>${pct}%</b>)<extra></extra>`;
                 })
             });
         }
