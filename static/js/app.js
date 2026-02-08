@@ -154,8 +154,13 @@ const App = (function() {
             changeEl.className = 'badge fs-6';
         }
 
-        // Key ratios
-        document.getElementById('market-cap').textContent = info.market_cap || '-';
+        // Key ratios - format market cap to always show " Cr" at end
+        let marketCap = info.market_cap || '-';
+        if (marketCap && marketCap !== '-') {
+            // Remove any existing Cr/Cr./CR at end, then add " Cr"
+            marketCap = marketCap.replace(/\s*[Cc][Rr]\.?\s*$/, '') + ' Cr';
+        }
+        document.getElementById('market-cap').textContent = marketCap;
         document.getElementById('pe-ratio').textContent =
             info.pe_ratio != null ? info.pe_ratio.toFixed(2) : '-';
         document.getElementById('pb-ratio').textContent =

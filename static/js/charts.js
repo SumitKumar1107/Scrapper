@@ -482,6 +482,20 @@ const ChartsModule = (function() {
     }
 
     /**
+     * Scroll chart containers to the right (show latest data)
+     */
+    function scrollChartsToRight() {
+        const chartIds = ['sales-chart', 'profit-chart', 'margins-chart', 'eps-chart', 'breakdown-chart'];
+        chartIds.forEach(id => {
+            const container = document.getElementById(id);
+            if (container && container.parentElement) {
+                const parent = container.parentElement;
+                parent.scrollLeft = parent.scrollWidth;
+            }
+        });
+    }
+
+    /**
      * Render all charts
      */
     function renderAllCharts(data) {
@@ -490,6 +504,9 @@ const ChartsModule = (function() {
         renderMarginsChart(data);
         renderEPSChart(data);
         renderSalesBreakdownChart(data);
+
+        // Scroll to right after charts render
+        setTimeout(scrollChartsToRight, 100);
     }
 
     /**
