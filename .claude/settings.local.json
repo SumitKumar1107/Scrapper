@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.screener.in)",
+      "WebSearch",
+      "Bash(pip install:*)",
+      "Bash(python -m pip install:*)",
+      "Bash(py -m pip install:*)"
+    ]
+  }
+}
