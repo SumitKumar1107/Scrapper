@@ -26,6 +26,11 @@ class TableParser:
         'net profit': 'net_profit',
         'eps in rs': 'eps',
         'eps': 'eps',
+        # Cash flow mappings
+        'cash from operating': 'cash_from_operations',
+        'cash from investing': 'cash_from_investing',
+        'cash from financing': 'cash_from_financing',
+        'net cash flow': 'net_cash_flow',
     }
 
     @classmethod
@@ -92,7 +97,11 @@ class TableParser:
             profit_before_tax=data.get('profit_before_tax', []),
             tax_percent=data.get('tax_percent', []),
             net_profit=data.get('net_profit', []),
-            eps=data.get('eps', [])
+            eps=data.get('eps', []),
+            cash_from_operations=data.get('cash_from_operations', []),
+            cash_from_investing=data.get('cash_from_investing', []),
+            cash_from_financing=data.get('cash_from_financing', []),
+            net_cash_flow=data.get('net_cash_flow', [])
         )
 
     @classmethod
@@ -160,5 +169,9 @@ class TableParser:
             profit_before_tax=[],
             tax_percent=[],
             net_profit=[],
-            eps=[]
+            eps=[],
+            cash_from_operations=[],
+            cash_from_investing=[],
+            cash_from_financing=[],
+            net_cash_flow=[]
         )

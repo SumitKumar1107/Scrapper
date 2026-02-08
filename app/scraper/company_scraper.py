@@ -35,6 +35,14 @@ class CompanyScraper(BaseScraper):
         company_info = self._parse_company_info(soup, ticker)
         quarterly_data = self._parse_quarterly_data(soup)
         annual_data = self._parse_annual_data(soup)
+        cash_flow_data = self._parse_cash_flow_data(soup)
+
+        # Merge cash flow data into annual data
+        if cash_flow_data.periods:
+            annual_data.cash_from_operations = cash_flow_data.cash_from_operations
+            annual_data.cash_from_investing = cash_flow_data.cash_from_investing
+            annual_data.cash_from_financing = cash_flow_data.cash_from_financing
+            annual_data.net_cash_flow = cash_flow_data.net_cash_flow
 
         return CompanyData(
             company_info=company_info,
@@ -317,6 +325,29 @@ class CompanyScraper(BaseScraper):
         table = section.find('table')
         return TableParser.parse_financial_table(table) if table else self._empty_financial_data()
 
+    def _parse_cash_flow_data(self, soup: BeautifulSoup) -> FinancialData:
+        """
+        Parse cash flow statement table.
+
+        Args:
+            soup: BeautifulSoup object
+
+        Returns:
+            FinancialData object with cash flow data
+        """
+        # Find the Cash Flow section
+        section = soup.find('section', id='cash-flow')
+        if not section:
+            # Try alternative selectors
+            section = soup.find('section', {'id': re.compile(r'cash.*flow', re.I)})
+
+        if not section:
+            self.logger.warning("Cash flow section not found")
+            return self._empty_financial_data()
+
+        table = section.find('table')
+        return TableParser.parse_financial_table(table) if table else self._empty_financial_data()
+
     def _parse_number(self, text: Optional[str]) -> Optional[float]:
         """
         Parse a number from text.
@@ -380,5 +411,9 @@ class CompanyScraper(BaseScraper):
             profit_before_tax=[],
             tax_percent=[],
             net_profit=[],
-            eps=[]
+            eps=[],
+            cash_from_operations=[],
+            cash_from_investing=[],
+            cash_from_financing=[],
+            net_cash_flow=[]
         )

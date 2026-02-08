@@ -182,7 +182,8 @@ const App = (function() {
             ? currentData.quarterly_data
             : currentData.annual_data;
 
-        ChartsModule.renderAllCharts(data);
+        // Always use annual data for cash flow (not available in quarterly)
+        ChartsModule.renderAllCharts(data, currentData.annual_data);
     }
 
     /**

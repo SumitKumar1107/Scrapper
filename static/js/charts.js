@@ -482,10 +482,52 @@ const ChartsModule = (function() {
     }
 
     /**
+     * Render Cash Flow from Operations bar chart
+     */
+    function renderCashFlowChart(data, containerId = 'cashflow-chart') {
+        if (!data.periods || data.periods.length === 0 ||
+            !data.cash_from_operations || data.cash_from_operations.every(v => v == null)) {
+            showNoData(containerId);
+            return;
+        }
+
+        // Set container width based on data
+        setContainerWidth(containerId, data.periods.length);
+
+        const trace = {
+            x: data.periods,
+            y: data.cash_from_operations,
+            type: 'bar',
+            name: 'Cash from Operations',
+            marker: {
+                color: data.cash_from_operations.map(v => v >= 0 ? '#198754' : '#dc3545')
+            },
+            hovertemplate: '<b>%{x}</b><br>Cash from Operations: %{y:,.0f} Cr<extra></extra>'
+        };
+
+        const layout = {
+            ...baseLayout,
+            yaxis: {
+                ...baseLayout.yaxis,
+                title: { text: 'Amount (Cr)', standoff: 10 },
+                tickformat: ',.0f'
+            },
+            xaxis: {
+                ...baseLayout.xaxis,
+                tickangle: -45,
+                range: [-0.5, data.periods.length - 0.5],
+                dtick: 1
+            }
+        };
+
+        Plotly.newPlot(containerId, [trace], layout, chartConfig);
+    }
+
+    /**
      * Scroll chart containers to the right (show latest data)
      */
     function scrollChartsToRight() {
-        const chartIds = ['sales-chart', 'profit-chart', 'margins-chart', 'eps-chart', 'breakdown-chart'];
+        const chartIds = ['sales-chart', 'profit-chart', 'margins-chart', 'eps-chart', 'breakdown-chart', 'cashflow-chart'];
         chartIds.forEach(id => {
             const container = document.getElementById(id);
             if (container && container.parentElement) {
@@ -498,10 +540,12 @@ const ChartsModule = (function() {
     /**
      * Render all charts
      */
-    function renderAllCharts(data) {
+    function renderAllCharts(data, annualData = null) {
         renderSalesChart(data);
         renderProfitChart(data);
         renderMarginsChart(data);
+        // Cash flow uses annual data (not available in quarterly)
+        renderCashFlowChart(annualData || data);
         renderEPSChart(data);
         renderSalesBreakdownChart(data);
 
@@ -513,7 +557,7 @@ const ChartsModule = (function() {
      * Resize all charts (call on window resize)
      */
     function resizeCharts() {
-        const chartIds = ['sales-chart', 'profit-chart', 'margins-chart', 'eps-chart', 'breakdown-chart'];
+        const chartIds = ['sales-chart', 'profit-chart', 'margins-chart', 'eps-chart', 'breakdown-chart', 'cashflow-chart'];
         chartIds.forEach(id => {
             const container = document.getElementById(id);
             if (container && container.data) {
@@ -537,6 +581,7 @@ const ChartsModule = (function() {
         renderMarginsChart: renderMarginsChart,
         renderEPSChart: renderEPSChart,
         renderSalesBreakdownChart: renderSalesBreakdownChart,
+        renderCashFlowChart: renderCashFlowChart,
         resizeCharts: resizeCharts
     };
 })();

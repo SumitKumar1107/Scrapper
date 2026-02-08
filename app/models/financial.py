@@ -19,6 +19,11 @@ class FinancialData(BaseModel):
     tax_percent: List[Optional[float]] = []
     net_profit: List[Optional[float]] = []
     eps: List[Optional[float]] = []
+    # Cash flow data
+    cash_from_operations: List[Optional[float]] = []
+    cash_from_investing: List[Optional[float]] = []
+    cash_from_financing: List[Optional[float]] = []
+    net_cash_flow: List[Optional[float]] = []
 
 
 class CompanyData(BaseModel):
