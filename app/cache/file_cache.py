@@ -159,3 +159,32 @@ class FileCache:
             }
         except Exception:
             return None
+
+    def cleanup_expired(self) -> int:
+        """
+        Delete all expired cache files. Call this on app startup.
+
+        Returns:
+            Number of expired files deleted
+        """
+        count = 0
+        for cache_file in self.cache_dir.glob("*.json"):
+            try:
+                with open(cache_file, 'r', encoding='utf-8') as f:
+                    cached = json.load(f)
+
+                cached_at = datetime.fromisoformat(cached['_cached_at'])
+                if datetime.now() - cached_at > self.ttl:
+                    cache_file.unlink()
+                    count += 1
+            except Exception:
+                # Delete corrupted files too
+                try:
+                    cache_file.unlink()
+                    count += 1
+                except Exception:
+                    pass
+
+        if count > 0:
+            self.logger.info(f"Cleaned up {count} expired cache files")
+        return count

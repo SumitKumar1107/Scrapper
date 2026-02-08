@@ -3,10 +3,12 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 import logging
 
 from app.api.routes import search, company
 from app.utils.exceptions import ScraperException, scraper_exception_handler
+from app.cache.file_cache import FileCache
 
 # Configure logging
 logging.basicConfig(
@@ -15,11 +17,25 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Startup and shutdown events"""
+    # Startup: Clear all cache files
+    cache = FileCache()
+    deleted = cache.clear_all()
+    if deleted > 0:
+        logger.info(f"Startup: Cleared {deleted} cache files")
+    yield
+    # Shutdown: nothing to do
+
+
 # Create FastAPI app
 app = FastAPI(
     title="Financial Data Scraper",
     description="Scrapes financial data from screener.in and displays interactive charts",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
 
 # CORS middleware
