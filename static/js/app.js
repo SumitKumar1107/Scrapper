@@ -158,14 +158,15 @@ const App = (function() {
         document.getElementById('market-cap').textContent = info.market_cap || '-';
         document.getElementById('pe-ratio').textContent =
             info.pe_ratio != null ? info.pe_ratio.toFixed(2) : '-';
-        document.getElementById('book-value').textContent =
-            info.book_value != null ? formatNumber(info.book_value) : '-';
-        document.getElementById('div-yield').textContent =
-            info.dividend_yield != null ? `${info.dividend_yield}%` : '-';
+        document.getElementById('pb-ratio').textContent =
+            info.pb_ratio != null ? info.pb_ratio.toFixed(2) : '-';
         document.getElementById('roce').textContent =
             info.roce != null ? `${info.roce}%` : '-';
         document.getElementById('roe').textContent =
             info.roe != null ? `${info.roe}%` : '-';
+        document.getElementById('debt').textContent = info.debt || '-';
+        document.getElementById('debt-to-equity').textContent =
+            info.debt_to_equity != null ? info.debt_to_equity.toFixed(2) : '-';
     }
 
     /**

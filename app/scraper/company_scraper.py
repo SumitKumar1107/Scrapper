@@ -91,10 +91,11 @@ class CompanyScraper(BaseScraper):
             price_change_percent=price_change,
             market_cap=ratios.get('market_cap'),
             pe_ratio=self._parse_number(ratios.get('pe_ratio', '')),
-            book_value=self._parse_number(ratios.get('book_value', '')),
-            dividend_yield=self._parse_number(ratios.get('dividend_yield', '')),
+            pb_ratio=self._parse_number(ratios.get('pb_ratio', '')),
             roce=self._parse_number(ratios.get('roce', '')),
             roe=self._parse_number(ratios.get('roe', '')),
+            debt=ratios.get('debt'),
+            debt_to_equity=self._parse_number(ratios.get('debt_to_equity', '')),
             bse_code=bse_code,
             nse_code=nse_code or ticker
         )
@@ -124,16 +125,18 @@ class CompanyScraper(BaseScraper):
 
                 if 'market cap' in name:
                     ratios['market_cap'] = value
-                elif 'stock p/e' in name or 'p/e' in name:
+                elif 'stock p/e' in name or name == 'p/e':
                     ratios['pe_ratio'] = value
-                elif 'book value' in name:
-                    ratios['book_value'] = value
-                elif 'dividend' in name:
-                    ratios['dividend_yield'] = value
+                elif 'price to book' in name or 'p/b' in name:
+                    ratios['pb_ratio'] = value
                 elif 'roce' in name:
                     ratios['roce'] = value
                 elif 'roe' in name:
                     ratios['roe'] = value
+                elif 'debt to equity' in name or 'debt/equity' in name:
+                    ratios['debt_to_equity'] = value
+                elif name == 'debt' or name == 'total debt':
+                    ratios['debt'] = value
 
         return ratios
 

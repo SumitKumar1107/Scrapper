@@ -10,10 +10,11 @@ class CompanyInfo(BaseModel):
     price_change_percent: Optional[float] = None
     market_cap: Optional[str] = None
     pe_ratio: Optional[float] = None
-    book_value: Optional[float] = None
-    dividend_yield: Optional[float] = None
+    pb_ratio: Optional[float] = None
     roce: Optional[float] = None
     roe: Optional[float] = None
+    debt: Optional[str] = None
+    debt_to_equity: Optional[float] = None
     bse_code: Optional[str] = None
     nse_code: Optional[str] = None
     sector: Optional[str] = None
