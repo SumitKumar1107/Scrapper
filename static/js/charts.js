@@ -20,11 +20,11 @@ const ChartsModule = (function() {
 
     // Base layout configuration
     const baseLayout = {
-        margin: { t: 40, r: 30, b: 60, l: 70 },
+        margin: { t: 40, r: 50, b: 100, l: 80 },
         showlegend: true,
         legend: {
             orientation: 'h',
-            y: -0.15,
+            y: -0.25,
             x: 0.5,
             xanchor: 'center'
         },
@@ -38,7 +38,9 @@ const ChartsModule = (function() {
         xaxis: {
             showgrid: false,
             showline: true,
-            linecolor: '#dee2e6'
+            linecolor: '#dee2e6',
+            automargin: true,
+            tickfont: { size: 11 }
         },
         yaxis: {
             showgrid: true,
@@ -46,8 +48,11 @@ const ChartsModule = (function() {
             showline: true,
             linecolor: '#dee2e6',
             zeroline: true,
-            zerolinecolor: '#dee2e6'
-        }
+            zerolinecolor: '#dee2e6',
+            automargin: true
+        },
+        bargap: 0.3,
+        bargroupgap: 0.1
     };
 
     // Color palette
@@ -60,6 +65,30 @@ const ChartsModule = (function() {
         danger: '#dc3545'
     };
 
+    // Calculate chart width based on number of data points
+    function calculateChartWidth(numPeriods, minWidthPerBar = 50, minWidth = 400, maxWidth = null) {
+        const calculatedWidth = Math.max(minWidth, numPeriods * minWidthPerBar + 150);
+        if (maxWidth) {
+            return Math.min(calculatedWidth, maxWidth);
+        }
+        return calculatedWidth;
+    }
+
+    // Set container width and render chart
+    function setContainerWidth(containerId, numPeriods) {
+        const container = document.getElementById(containerId);
+        if (container) {
+            const width = calculateChartWidth(numPeriods);
+            const parentWidth = container.parentElement.offsetWidth;
+            // Only constrain if calculated width is less than parent
+            if (width < parentWidth) {
+                container.style.width = width + 'px';
+            } else {
+                container.style.width = '100%';
+            }
+        }
+    }
+
     /**
      * Render Sales/Revenue bar chart
      */
@@ -68,6 +97,9 @@ const ChartsModule = (function() {
             showNoData(containerId);
             return;
         }
+
+        // Set container width based on data
+        setContainerWidth(containerId, data.periods.length);
 
         const trace = {
             x: data.periods,
@@ -93,7 +125,9 @@ const ChartsModule = (function() {
             },
             xaxis: {
                 ...baseLayout.xaxis,
-                tickangle: -45
+                tickangle: -45,
+                range: [-0.5, data.periods.length - 0.5],
+                dtick: 1
             }
         };
 
@@ -108,6 +142,9 @@ const ChartsModule = (function() {
             showNoData(containerId);
             return;
         }
+
+        // Set container width based on data
+        setContainerWidth(containerId, data.periods.length);
 
         const operatingTrace = {
             x: data.periods,
@@ -137,7 +174,9 @@ const ChartsModule = (function() {
             },
             xaxis: {
                 ...baseLayout.xaxis,
-                tickangle: -45
+                tickangle: -45,
+                range: [-0.5, data.periods.length - 0.5],
+                dtick: 1
             }
         };
 
@@ -152,6 +191,9 @@ const ChartsModule = (function() {
             showNoData(containerId);
             return;
         }
+
+        // Set container width based on data
+        setContainerWidth(containerId, data.periods.length);
 
         const traces = [];
 
@@ -219,7 +261,8 @@ const ChartsModule = (function() {
             },
             xaxis: {
                 ...baseLayout.xaxis,
-                tickangle: -45
+                tickangle: -45,
+                range: [-0.5, data.periods.length - 0.5]
             }
         };
 
@@ -234,6 +277,9 @@ const ChartsModule = (function() {
             showNoData(containerId);
             return;
         }
+
+        // Set container width based on data
+        setContainerWidth(containerId, data.periods.length);
 
         const trace = {
             x: data.periods,
@@ -258,7 +304,8 @@ const ChartsModule = (function() {
             },
             xaxis: {
                 ...baseLayout.xaxis,
-                tickangle: -45
+                tickangle: -45,
+                range: [-0.5, data.periods.length - 0.5]
             }
         };
 

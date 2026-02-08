@@ -117,8 +117,25 @@ main {
 
 /* Chart Containers */
 .chart-container {
-    width: 100%;
     height: 350px;
+    min-width: 400px;
+}
+
+/* Charts Section - cards fit content */
+#charts-section .card {
+    display: inline-block;
+    width: auto;
+    max-width: 100%;
+}
+
+#charts-section .col-12 {
+    display: flex;
+    justify-content: flex-start;
+}
+
+#charts-section .card-body {
+    padding: 1rem;
+    overflow-x: auto;
 }
 
 /* Cards */
@@ -175,6 +192,7 @@ main {
 @media (max-width: 768px) {
     .chart-container {
         height: 280px;
+        min-width: 300px;
     }
 
     .navbar-brand {
@@ -192,11 +210,16 @@ main {
     .ratio-card {
         margin-bottom: 0.5rem;
     }
+
+    #charts-section .col-12 {
+        overflow-x: auto;
+    }
 }
 
 @media (max-width: 576px) {
     .chart-container {
         height: 250px;
+        min-width: 280px;
     }
 
     .btn-group {
