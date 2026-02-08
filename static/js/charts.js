@@ -335,6 +335,153 @@ const ChartsModule = (function() {
     }
 
     /**
+     * Render Sales Breakdown stacked bar chart
+     * Shows how expenses, interest, depreciation, tax eat into sales
+     */
+    function renderSalesBreakdownChart(data, containerId = 'breakdown-chart') {
+        if (!data.periods || data.periods.length === 0) {
+            showNoData(containerId);
+            return;
+        }
+
+        // Set container width based on data
+        setContainerWidth(containerId, data.periods.length);
+
+        // Calculate tax amount (PBT - Net Profit)
+        const taxAmount = data.periods.map((_, i) => {
+            if (data.profit_before_tax[i] != null && data.net_profit[i] != null) {
+                return Math.max(0, data.profit_before_tax[i] - data.net_profit[i]);
+            }
+            return 0;
+        });
+
+        // Calculate other expenses (Sales - Material Cost - Operating Profit - Other Income)
+        // Or simply: Expenses - Material Cost (if expenses includes everything)
+        const otherExpenses = data.periods.map((_, i) => {
+            if (data.expenses[i] != null) {
+                // Expenses typically includes material cost
+                const matCost = data.material_cost[i] || 0;
+                return Math.max(0, data.expenses[i] - matCost);
+            }
+            return 0;
+        });
+
+        const traces = [];
+
+        // Material Cost / COGS
+        if (data.material_cost && data.material_cost.some(v => v != null && v > 0)) {
+            traces.push({
+                x: data.periods,
+                y: data.material_cost,
+                type: 'bar',
+                name: 'Material Cost',
+                marker: { color: '#6c757d' },
+                hovertemplate: data.periods.map((period, i) => {
+                    const pct = data.sales[i] ? ((data.material_cost[i] || 0) / data.sales[i] * 100).toFixed(1) : 0;
+                    return `<b>${period}</b><br>Material Cost: %{y:,.0f} Cr<br><b>${pct}% of Sales</b><extra></extra>`;
+                })
+            });
+        }
+
+        // Other Operating Expenses
+        if (otherExpenses.some(v => v > 0)) {
+            traces.push({
+                x: data.periods,
+                y: otherExpenses,
+                type: 'bar',
+                name: 'Operating Expenses',
+                marker: { color: '#fd7e14' },
+                hovertemplate: data.periods.map((period, i) => {
+                    const pct = data.sales[i] ? (otherExpenses[i] / data.sales[i] * 100).toFixed(1) : 0;
+                    return `<b>${period}</b><br>Operating Expenses: ${otherExpenses[i].toFixed(0)} Cr<br><b>${pct}% of Sales</b><extra></extra>`;
+                })
+            });
+        }
+
+        // Depreciation
+        if (data.depreciation && data.depreciation.some(v => v != null && v > 0)) {
+            traces.push({
+                x: data.periods,
+                y: data.depreciation,
+                type: 'bar',
+                name: 'Depreciation',
+                marker: { color: '#6f42c1' },
+                hovertemplate: data.periods.map((period, i) => {
+                    const pct = data.sales[i] ? ((data.depreciation[i] || 0) / data.sales[i] * 100).toFixed(1) : 0;
+                    return `<b>${period}</b><br>Depreciation: %{y:,.0f} Cr<br><b>${pct}% of Sales</b><extra></extra>`;
+                })
+            });
+        }
+
+        // Interest
+        if (data.interest && data.interest.some(v => v != null && v > 0)) {
+            traces.push({
+                x: data.periods,
+                y: data.interest,
+                type: 'bar',
+                name: 'Interest',
+                marker: { color: '#dc3545' },
+                hovertemplate: data.periods.map((period, i) => {
+                    const pct = data.sales[i] ? ((data.interest[i] || 0) / data.sales[i] * 100).toFixed(1) : 0;
+                    return `<b>${period}</b><br>Interest: %{y:,.0f} Cr<br><b>${pct}% of Sales</b><extra></extra>`;
+                })
+            });
+        }
+
+        // Tax
+        if (taxAmount.some(v => v > 0)) {
+            traces.push({
+                x: data.periods,
+                y: taxAmount,
+                type: 'bar',
+                name: 'Tax',
+                marker: { color: '#ffc107' },
+                hovertemplate: data.periods.map((period, i) => {
+                    const pct = data.sales[i] ? (taxAmount[i] / data.sales[i] * 100).toFixed(1) : 0;
+                    return `<b>${period}</b><br>Tax: ${taxAmount[i].toFixed(0)} Cr<br><b>${pct}% of Sales</b><extra></extra>`;
+                })
+            });
+        }
+
+        // Net Profit (what's left)
+        if (data.net_profit && data.net_profit.some(v => v != null)) {
+            traces.push({
+                x: data.periods,
+                y: data.net_profit,
+                type: 'bar',
+                name: 'Net Profit',
+                marker: { color: '#198754' },
+                hovertemplate: data.periods.map((period, i) => {
+                    const pct = data.sales[i] ? ((data.net_profit[i] || 0) / data.sales[i] * 100).toFixed(1) : 0;
+                    return `<b>${period}</b><br>Net Profit: %{y:,.0f} Cr<br><b>${pct}% of Sales</b><extra></extra>`;
+                })
+            });
+        }
+
+        const layout = {
+            ...baseLayout,
+            barmode: 'stack',
+            yaxis: {
+                ...baseLayout.yaxis,
+                title: { text: 'Amount (Cr)', standoff: 10 },
+                tickformat: ',.0f'
+            },
+            xaxis: {
+                ...baseLayout.xaxis,
+                tickangle: -45,
+                range: [-0.5, data.periods.length - 0.5],
+                dtick: 1
+            },
+            legend: {
+                ...baseLayout.legend,
+                y: -0.25
+            }
+        };
+
+        Plotly.newPlot(containerId, traces, layout, chartConfig);
+    }
+
+    /**
      * Render all charts
      */
     function renderAllCharts(data) {
@@ -342,13 +489,14 @@ const ChartsModule = (function() {
         renderProfitChart(data);
         renderMarginsChart(data);
         renderEPSChart(data);
+        renderSalesBreakdownChart(data);
     }
 
     /**
      * Resize all charts (call on window resize)
      */
     function resizeCharts() {
-        const chartIds = ['sales-chart', 'profit-chart', 'margins-chart', 'eps-chart'];
+        const chartIds = ['sales-chart', 'profit-chart', 'margins-chart', 'eps-chart', 'breakdown-chart'];
         chartIds.forEach(id => {
             const container = document.getElementById(id);
             if (container && container.data) {
@@ -371,6 +519,7 @@ const ChartsModule = (function() {
         renderProfitChart: renderProfitChart,
         renderMarginsChart: renderMarginsChart,
         renderEPSChart: renderEPSChart,
+        renderSalesBreakdownChart: renderSalesBreakdownChart,
         resizeCharts: resizeCharts
     };
 })();
