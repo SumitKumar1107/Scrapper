@@ -669,7 +669,8 @@ main {
 }
 
 .research-markdown strong {
-    color: var(--text-primary);
+    font-weight: normal;
+    color: inherit;
 }
 
 .research-markdown code {
