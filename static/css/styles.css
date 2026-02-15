@@ -401,6 +401,7 @@ main {
 
 /* --- Chart Cards --- */
 .chart-card {
+    position: relative;
     background: var(--bg-secondary);
     border: 1px solid var(--border-primary);
     border-radius: var(--radius-lg);
@@ -418,6 +419,9 @@ main {
     border-bottom: 1px solid var(--border-primary) !important;
     padding: 1rem 1.25rem;
     color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .chart-header h5 {
@@ -482,30 +486,10 @@ main {
     justify-content: flex-start;
 }
 
-/* Plotly modebar dark theme */
-.modebar {
-    background: transparent !important;
-}
-
-.modebar-group {
-    background: transparent !important;
-    padding: 0 !important;
-}
-
-.modebar-btn {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    padding: 3px !important;
-}
-
-.modebar-btn svg {
-    fill: var(--text-muted) !important;
-}
-
-.modebar-btn:hover svg {
-    fill: var(--accent-primary-hover) !important;
+/* Chart download button in header */
+.chart-download-btn {
+    margin-left: auto;
+    flex-shrink: 0;
 }
 
 /* --- Toggle & Controls --- */

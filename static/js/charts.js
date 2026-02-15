@@ -6,16 +6,8 @@ const ChartsModule = (function() {
     // Chart configuration - only show download PNG button
     const chartConfig = {
         responsive: true,
-        displayModeBar: true,
-        modeBarButtons: [['toImage']],
-        displaylogo: false,
-        toImageButtonOptions: {
-            format: 'png',
-            filename: 'financial_chart',
-            height: 700,
-            width: 1400,
-            scale: 2
-        }
+        displayModeBar: false,
+        displaylogo: false
     };
 
     // Base layout configuration - dark theme
@@ -42,8 +34,8 @@ const ChartsModule = (function() {
             showline: true,
             linecolor: 'rgba(255, 255, 255, 0.08)',
             automargin: true,
-            tickfont: { size: 11, color: '#94a3b8' },
-            title: { font: { color: '#cbd5e1' } }
+            tickfont: { size: 11, color: '#e2e8f0' },
+            title: { font: { color: '#ffffff' } }
         },
         yaxis: {
             showgrid: true,
@@ -53,8 +45,8 @@ const ChartsModule = (function() {
             zeroline: true,
             zerolinecolor: 'rgba(255, 255, 255, 0.1)',
             automargin: true,
-            tickfont: { color: '#94a3b8' },
-            title: { font: { color: '#cbd5e1' } }
+            tickfont: { color: '#ffffff' },
+            title: { font: { color: '#ffffff', size: 13 } }
         },
         bargap: 0.3,
         bargroupgap: 0.1
@@ -125,7 +117,7 @@ const ChartsModule = (function() {
             ...baseLayout,
             yaxis: {
                 ...baseLayout.yaxis,
-                title: { text: 'Amount (Cr)', standoff: 10 },
+                title: { text: 'Amount (Cr)', standoff: 10, font: { color: '#ffffff', size: 13 } },
                 tickformat: ',.0f'
             },
             xaxis: {
@@ -174,7 +166,7 @@ const ChartsModule = (function() {
             barmode: 'group',
             yaxis: {
                 ...baseLayout.yaxis,
-                title: { text: 'Amount (Cr)', standoff: 10 },
+                title: { text: 'Amount (Cr)', standoff: 10, font: { color: '#ffffff', size: 13 } },
                 tickformat: ',.0f'
             },
             xaxis: {
@@ -260,7 +252,7 @@ const ChartsModule = (function() {
             ...baseLayout,
             yaxis: {
                 ...baseLayout.yaxis,
-                title: { text: 'Margin (%)', standoff: 10 },
+                title: { text: 'Margin (%)', standoff: 10, font: { color: '#ffffff', size: 13 } },
                 tickformat: '.1f',
                 ticksuffix: '%'
             },
@@ -303,7 +295,7 @@ const ChartsModule = (function() {
             ...baseLayout,
             yaxis: {
                 ...baseLayout.yaxis,
-                title: { text: 'EPS (Rs)', standoff: 10 },
+                title: { text: 'EPS (Rs)', standoff: 10, font: { color: '#ffffff', size: 13 } },
                 tickformat: '.2f',
                 tickprefix: 'Rs '
             },
@@ -463,7 +455,7 @@ const ChartsModule = (function() {
             barmode: 'stack',
             yaxis: {
                 ...baseLayout.yaxis,
-                title: { text: 'Amount (Cr)', standoff: 10 },
+                title: { text: 'Amount (Cr)', standoff: 10, font: { color: '#ffffff', size: 13 } },
                 tickformat: ',.0f'
             },
             xaxis: {
@@ -509,7 +501,7 @@ const ChartsModule = (function() {
             ...baseLayout,
             yaxis: {
                 ...baseLayout.yaxis,
-                title: { text: 'Amount (Cr)', standoff: 10 },
+                title: { text: 'Amount (Cr)', standoff: 10, font: { color: '#ffffff', size: 13 } },
                 tickformat: ',.0f'
             },
             xaxis: {
@@ -593,7 +585,7 @@ const ChartsModule = (function() {
             ...baseLayout,
             yaxis: {
                 ...baseLayout.yaxis,
-                title: { text: 'Shareholding (%)', standoff: 10 },
+                title: { text: 'Shareholding (%)', standoff: 10, font: { color: '#ffffff', size: 13 } },
                 tickformat: '.1f',
                 ticksuffix: '%',
                 range: isArea ? [0, 100] : undefined
@@ -615,14 +607,44 @@ const ChartsModule = (function() {
     /**
      * Scroll chart containers to the right (show latest data)
      */
-    function scrollChartsToRight() {
+    function scrollChartsToCenter() {
         const chartIds = ['sales-chart', 'profit-chart', 'margins-chart', 'eps-chart', 'breakdown-chart', 'cashflow-chart', 'shareholding-chart'];
         chartIds.forEach(id => {
             const container = document.getElementById(id);
             if (container && container.parentElement) {
                 const parent = container.parentElement;
-                parent.scrollLeft = parent.scrollWidth;
+                parent.scrollLeft = (parent.scrollWidth - parent.clientWidth) / 2;
             }
+        });
+    }
+
+    /**
+     * Add download PNG buttons to each chart card header
+     */
+    function addDownloadButtons() {
+        const chartIds = ['sales-chart', 'profit-chart', 'margins-chart', 'eps-chart', 'breakdown-chart', 'cashflow-chart', 'shareholding-chart'];
+        chartIds.forEach(id => {
+            const chartEl = document.getElementById(id);
+            if (!chartEl) return;
+            const card = chartEl.closest('.chart-card');
+            if (!card) return;
+            const header = card.querySelector('.chart-header');
+            if (!header || header.querySelector('.chart-download-btn')) return;
+
+            var btn = document.createElement('button');
+            btn.className = 'refresh-btn chart-download-btn';
+            btn.title = 'Download as PNG';
+            btn.innerHTML = '<i class="bi bi-download"></i>';
+            btn.addEventListener('click', function() {
+                Plotly.downloadImage(id, {
+                    format: 'png',
+                    filename: id + '_chart',
+                    height: 700,
+                    width: 1400,
+                    scale: 2
+                });
+            });
+            header.appendChild(btn);
         });
     }
 
@@ -638,8 +660,11 @@ const ChartsModule = (function() {
         renderEPSChart(data);
         renderSalesBreakdownChart(data);
 
-        // Scroll to right after charts render
-        setTimeout(scrollChartsToRight, 100);
+        // Scroll to center and add download buttons after charts render
+        setTimeout(function() {
+            scrollChartsToCenter();
+            addDownloadButtons();
+        }, 100);
     }
 
     /**
