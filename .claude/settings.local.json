@@ -14,7 +14,8 @@
       "Bash(tasklist:*)",
       "Bash(findstr:*)",
       "Bash(powershell:*)",
-      "WebFetch(domain:cdn.jsdelivr.net)"
+      "WebFetch(domain:cdn.jsdelivr.net)",
+      "Bash(git push:*)"
     ]
   }
 }
