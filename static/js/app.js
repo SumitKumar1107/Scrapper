@@ -281,8 +281,6 @@ const App = (function() {
         if (companyInfo) companyInfo.classList.remove('d-none');
         if (dataToggle) dataToggle.classList.remove('d-none');
         if (chartsSection) chartsSection.classList.remove('d-none');
-        const aiSection = document.getElementById('ai-research-section');
-        if (aiSection) aiSection.classList.remove('d-none');
     }
 
     /**
@@ -292,8 +290,6 @@ const App = (function() {
         if (companyInfo) companyInfo.classList.add('d-none');
         if (dataToggle) dataToggle.classList.add('d-none');
         if (chartsSection) chartsSection.classList.add('d-none');
-        const aiSection = document.getElementById('ai-research-section');
-        if (aiSection) aiSection.classList.add('d-none');
     }
 
     /**
