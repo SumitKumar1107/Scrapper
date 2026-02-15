@@ -2,13 +2,15 @@ import os
 import logging
 from pathlib import Path
 from dotenv import load_dotenv
-import google.generativeai as genai
+import requests
 
 load_dotenv()
 
 logger = logging.getLogger(__name__)
 
 PROMPT_TEMPLATE_PATH = Path(__file__).parent.parent.parent / "research_prompt.txt"
+GEMINI_MODEL = "gemini-3-pro-preview"
+GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
 
 
 def load_prompt_template() -> str:
@@ -33,7 +35,7 @@ def load_prompt_template() -> str:
 
 def generate_research(company_name: str) -> str:
     """
-    Generate AI research analysis for a company using Google Gemini.
+    Generate AI research analysis for a company using Google Gemini REST API.
 
     Args:
         company_name: Full company name (e.g., "Reliance Industries")
@@ -56,21 +58,32 @@ def generate_research(company_name: str) -> str:
     template = load_prompt_template()
     prompt = template.replace("{company_name}", company_name)
 
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-3-pro-preview")
-
     logger.info(f"Generating AI research for: {company_name}")
 
-    response = model.generate_content(
-        prompt,
-        generation_config=genai.types.GenerationConfig(
-            temperature=0.7,
-            max_output_tokens=65536,
-        )
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {
+            "temperature": 0.7,
+            "maxOutputTokens": 65536,
+        }
+    }
+
+    resp = requests.post(
+        f"{GEMINI_API_URL}?key={api_key}",
+        json=payload,
+        timeout=120
     )
 
-    if not response or not response.text:
+    if resp.status_code != 200:
+        error_msg = resp.text
+        logger.error(f"Gemini API error {resp.status_code}: {error_msg}")
+        raise Exception(f"Gemini API error: {resp.status_code} - {error_msg}")
+
+    data = resp.json()
+    text = data["candidates"][0]["content"]["parts"][0]["text"]
+
+    if not text:
         raise Exception("Gemini API returned an empty response")
 
     logger.info(f"AI research generated successfully for: {company_name}")
-    return response.text
+    return text
