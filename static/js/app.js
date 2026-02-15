@@ -197,13 +197,7 @@ const App = (function() {
             ? currentData.shareholding_quarterly
             : currentData.shareholding_yearly;
 
-        const companyName = currentData.company_info ? currentData.company_info.name : '';
-        const titleEl = document.getElementById('shareholding-title');
-        if (titleEl) {
-            titleEl.textContent = `Shareholding Pattern - ${companyName || ''}`.trim();
-        }
-
-        ChartsModule.renderShareholdingChart(shData, companyName);
+        ChartsModule.renderShareholdingChart(shData);
     }
 
     /**
