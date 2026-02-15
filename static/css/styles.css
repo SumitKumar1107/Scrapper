@@ -464,14 +464,14 @@ main {
 
 /* Chart container */
 .chart-container {
-    height: 350px;
+    height: 450px;
     min-width: 0;
     width: 100%;
 }
 
 .chart-card .card-body {
     padding: 1rem;
-    overflow-x: auto;
+    overflow: hidden;
 }
 
 /* Charts section layout */
@@ -735,13 +735,13 @@ main {
 }
 
 /* Stagger chart card animations */
-#charts-section .col-lg-6:nth-child(1) { animation: fadeInUp 0.4s ease-out 0.0s both; }
-#charts-section .col-lg-6:nth-child(2) { animation: fadeInUp 0.4s ease-out 0.05s both; }
-#charts-section .col-lg-6:nth-child(3) { animation: fadeInUp 0.4s ease-out 0.1s both; }
-#charts-section .col-lg-6:nth-child(4) { animation: fadeInUp 0.4s ease-out 0.15s both; }
-#charts-section .col-lg-6:nth-child(5) { animation: fadeInUp 0.4s ease-out 0.2s both; }
-#charts-section .col-lg-6:nth-child(6) { animation: fadeInUp 0.4s ease-out 0.25s both; }
-#charts-section .col-lg-6:nth-child(7) { animation: fadeInUp 0.4s ease-out 0.3s both; }
+#charts-section .col-12:nth-child(1) { animation: fadeInUp 0.4s ease-out 0.0s both; }
+#charts-section .col-12:nth-child(2) { animation: fadeInUp 0.4s ease-out 0.05s both; }
+#charts-section .col-12:nth-child(3) { animation: fadeInUp 0.4s ease-out 0.1s both; }
+#charts-section .col-12:nth-child(4) { animation: fadeInUp 0.4s ease-out 0.15s both; }
+#charts-section .col-12:nth-child(5) { animation: fadeInUp 0.4s ease-out 0.2s both; }
+#charts-section .col-12:nth-child(6) { animation: fadeInUp 0.4s ease-out 0.25s both; }
+#charts-section .col-12:nth-child(7) { animation: fadeInUp 0.4s ease-out 0.3s both; }
 
 /* --- Bootstrap Overrides --- */
 .card {
@@ -830,7 +830,7 @@ main {
     }
 
     .chart-container {
-        height: 280px;
+        height: 350px;
     }
 
     .ratio-card {
@@ -872,7 +872,7 @@ main {
     }
 
     .chart-container {
-        height: 250px;
+        height: 300px;
     }
 
     .search-bar {
