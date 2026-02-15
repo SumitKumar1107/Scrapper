@@ -307,10 +307,61 @@ footer a:hover {
 }
 
 /* Print Styles */
+/* AI Research Section */
+.research-markdown {
+    line-height: 1.7;
+    color: #212529;
+}
+
+.research-markdown h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #0d6efd;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.research-markdown h2:first-child {
+    margin-top: 0;
+}
+
+.research-markdown h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.research-markdown ul,
+.research-markdown ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.research-markdown li {
+    margin-bottom: 0.35rem;
+}
+
+.research-markdown p {
+    margin-bottom: 0.75rem;
+}
+
+.research-markdown strong {
+    color: #1a1a2e;
+}
+
+#research-loading .spinner-border {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
 @media print {
     .navbar,
     #search-section,
     #data-toggle,
+    #ai-research-section,
     footer {
         display: none !important;
     }

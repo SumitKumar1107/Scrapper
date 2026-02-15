@@ -271,6 +271,7 @@ const App = (function() {
         if (companyInfo) companyInfo.classList.remove('d-none');
         if (dataToggle) dataToggle.classList.remove('d-none');
         if (chartsSection) chartsSection.classList.remove('d-none');
+        if (typeof ResearchModule !== 'undefined') ResearchModule.show();
     }
 
     /**
@@ -280,6 +281,7 @@ const App = (function() {
         if (companyInfo) companyInfo.classList.add('d-none');
         if (dataToggle) dataToggle.classList.add('d-none');
         if (chartsSection) chartsSection.classList.add('d-none');
+        if (typeof ResearchModule !== 'undefined') ResearchModule.hide();
     }
 
     /**

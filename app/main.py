@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import logging
 
-from app.api.routes import search, company
+from app.api.routes import search, company, research
 from app.utils.exceptions import ScraperException, scraper_exception_handler
 from app.cache.file_cache import FileCache
 
@@ -59,6 +59,7 @@ app.add_exception_handler(ScraperException, scraper_exception_handler)
 # Include API routers
 app.include_router(search.router, prefix="/api", tags=["Search"])
 app.include_router(company.router, prefix="/api", tags=["Company"])
+app.include_router(research.router, prefix="/api", tags=["Research"])
 
 
 @app.get("/", response_class=HTMLResponse)
