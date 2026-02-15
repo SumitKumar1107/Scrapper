@@ -7,7 +7,9 @@ const ChartsModule = (function() {
     const chartConfig = {
         responsive: true,
         displayModeBar: false,
-        displaylogo: false
+        displaylogo: false,
+        scrollZoom: false,
+        doubleClick: false
     };
 
     // Base layout configuration - dark theme
@@ -29,11 +31,13 @@ const ChartsModule = (function() {
             size: 12,
             color: '#cbd5e1'
         },
+        dragmode: false,
         xaxis: {
             showgrid: false,
             showline: true,
             linecolor: 'rgba(255, 255, 255, 0.08)',
             automargin: true,
+            fixedrange: true,
             tickfont: { size: 11, color: '#e2e8f0' },
             title: { font: { color: '#ffffff' } }
         },
@@ -45,6 +49,7 @@ const ChartsModule = (function() {
             zeroline: true,
             zerolinecolor: 'rgba(255, 255, 255, 0.1)',
             automargin: true,
+            fixedrange: true,
             tickfont: { color: '#ffffff' },
             title: { font: { color: '#ffffff', size: 13 } }
         },
