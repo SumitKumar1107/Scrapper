@@ -13,7 +13,8 @@
       "Bash(del \"C:\\\\Users\\\\sumit\\\\OneDrive\\\\Desktop\\\\Scrapper\\\\cache_data\\\\*.json\")",
       "Bash(tasklist:*)",
       "Bash(findstr:*)",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "WebFetch(domain:cdn.jsdelivr.net)"
     ]
   }
 }

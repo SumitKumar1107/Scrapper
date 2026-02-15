@@ -43,9 +43,14 @@
                     </span>
                     AI Research - <span id="company-name" class="ms-1"></span>
                 </h5>
-                <button id="regenerate-btn" class="refresh-btn d-none" title="Regenerate">
-                    <i class="bi bi-arrow-clockwise"></i>
-                </button>
+                <div class="d-flex align-items-center gap-2">
+                    <button id="download-pdf-btn" class="refresh-btn d-none" title="Save as PDF">
+                        <i class="bi bi-file-earmark-pdf"></i>
+                    </button>
+                    <button id="regenerate-btn" class="refresh-btn d-none" title="Regenerate">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </button>
+                </div>
             </div>
             <div class="card-body p-4">
                 <!-- Loading -->
@@ -99,6 +104,8 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
     <script>
         const params = new URLSearchParams(window.location.search);
         const ticker = params.get('ticker');
@@ -114,9 +121,103 @@
         const bodyEl = document.getElementById('research-body');
         const generatedAtEl = document.getElementById('generated-at');
         const regenerateBtn = document.getElementById('regenerate-btn');
+        const downloadBtn = document.getElementById('download-pdf-btn');
 
         regenerateBtn.addEventListener('click', function() {
             fetchResearch(true);
+        });
+
+        downloadBtn.addEventListener('click', async function() {
+            var btn = downloadBtn;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-hourglass-split"></i>';
+
+            var wrapper = null;
+            try {
+                if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+                    throw new Error('PDF libraries not loaded. Please reload the page.');
+                }
+
+                var filename = (companyName || ticker || 'Research') + ' - AI Research.pdf';
+
+                // Create visible wrapper for html2canvas capture
+                wrapper = document.createElement('div');
+                wrapper.style.cssText = 'position:fixed;top:0;left:0;width:800px;background:#ffffff;color:#1e293b;font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:1.7;padding:40px 50px;z-index:99999;overflow:visible;';
+
+                wrapper.innerHTML =
+                    '<h1 style="font-size:22px;color:#1e293b;margin:0 0 4px 0;">' +
+                        (companyName || ticker || '') + ' - AI Research Report' +
+                    '</h1>' +
+                    '<p style="font-size:11px;color:#64748b;margin:0 0 16px 0;">Generated: ' +
+                        (generatedAtEl.textContent || new Date().toLocaleDateString()) +
+                        ' | AI-generated analysis. Not financial advice.</p>' +
+                    '<hr style="border:none;border-top:1px solid #cbd5e1;margin:0 0 20px 0;">' +
+                    bodyEl.innerHTML;
+
+                // Style children for clean white-background PDF
+                wrapper.querySelectorAll('h2').forEach(function(e){ e.style.cssText='font-size:17px;font-weight:600;color:#4338ca;margin:22px 0 8px;padding-bottom:4px;border-bottom:1px solid #e2e8f0;'; });
+                wrapper.querySelectorAll('h3').forEach(function(e){ e.style.cssText='font-size:15px;font-weight:600;color:#1e293b;margin:16px 0 6px;'; });
+                wrapper.querySelectorAll('p').forEach(function(e){ e.style.color='#334155'; e.style.marginBottom='8px'; });
+                wrapper.querySelectorAll('li').forEach(function(e){ e.style.cssText='color:#334155;margin-bottom:4px;'; });
+                wrapper.querySelectorAll('strong').forEach(function(e){ e.style.cssText='font-weight:normal;color:inherit;'; });
+                wrapper.querySelectorAll('table').forEach(function(e){ e.style.cssText='width:100%;border-collapse:collapse;margin:10px 0;font-size:12px;'; });
+                wrapper.querySelectorAll('th').forEach(function(e){ e.style.cssText='padding:6px 8px;border:1px solid #cbd5e1;background:#f1f5f9;color:#1e293b;font-weight:600;text-align:left;'; });
+                wrapper.querySelectorAll('td').forEach(function(e){ e.style.cssText='padding:5px 8px;border:1px solid #e2e8f0;color:#334155;text-align:left;'; });
+                wrapper.querySelectorAll('code').forEach(function(e){ e.style.cssText='background:#f1f5f9;color:#4338ca;padding:1px 4px;border-radius:3px;font-size:11px;'; });
+
+                document.body.appendChild(wrapper);
+
+                // Wait for browser to render
+                await new Promise(function(r) { setTimeout(r, 500); });
+
+                // Capture with html2canvas at high quality
+                var canvas = await html2canvas(wrapper, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#ffffff',
+                    width: 800,
+                    scrollY: -window.scrollY
+                });
+
+                document.body.removeChild(wrapper);
+                wrapper = null;
+
+                // Build multi-page A4 PDF with margins
+                var pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
+                var margin = 10;
+                var pageW = pdf.internal.pageSize.getWidth();
+                var pageH = pdf.internal.pageSize.getHeight();
+                var contentW = pageW - 2 * margin;
+                var contentH = pageH - 2 * margin;
+                var imgW = contentW;
+                var imgH = (canvas.height * imgW) / canvas.width;
+
+                var y = 0;
+                var page = 0;
+                while (y < imgH) {
+                    if (page > 0) pdf.addPage();
+                    pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin - y, imgW, imgH);
+                    // White mask top margin to hide bleed from previous page
+                    pdf.setFillColor(255, 255, 255);
+                    pdf.rect(0, 0, pageW, margin, 'F');
+                    // White mask bottom margin to hide bleed into next page
+                    pdf.rect(0, pageH - margin, pageW, margin, 'F');
+                    y += contentH;
+                    page++;
+                }
+
+                pdf.save(filename);
+
+            } catch (err) {
+                console.error('PDF generation failed:', err);
+                alert('PDF download failed: ' + (err.message || String(err)));
+                if (wrapper && wrapper.parentNode) {
+                    document.body.removeChild(wrapper);
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-file-earmark-pdf"></i>';
+            }
         });
 
         async function fetchResearch(refresh) {
@@ -124,6 +225,7 @@
             errorEl.classList.add('d-none');
             contentEl.classList.add('d-none');
             regenerateBtn.classList.add('d-none');
+            downloadBtn.classList.add('d-none');
 
             try {
                 let url = '/api/research/' + encodeURIComponent(ticker)
@@ -156,6 +258,7 @@
                 loadingEl.classList.add('d-none');
                 contentEl.classList.remove('d-none');
                 regenerateBtn.classList.remove('d-none');
+                downloadBtn.classList.remove('d-none');
 
             } catch (err) {
                 loadingEl.classList.add('d-none');
