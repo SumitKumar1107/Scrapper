@@ -47,6 +47,16 @@ const App = (function() {
             refreshBtn.addEventListener('click', handleRefresh);
         }
 
+        // AI Research button - opens in new tab
+        const researchBtn = document.getElementById('generate-research-btn');
+        if (researchBtn) {
+            researchBtn.addEventListener('click', function() {
+                if (!currentTicker || !currentData || !currentData.company_info) return;
+                const name = encodeURIComponent(currentData.company_info.name);
+                window.open(`/research?ticker=${encodeURIComponent(currentTicker)}&company_name=${name}`, '_blank');
+            });
+        }
+
         // Check URL for initial company
         checkUrlParams();
     }
@@ -70,7 +80,6 @@ const App = (function() {
         if (!ticker) return;
 
         ticker = ticker.toUpperCase().trim();
-        const isNewCompany = ticker !== currentTicker;
         currentTicker = ticker;
 
         showLoading();
@@ -99,10 +108,6 @@ const App = (function() {
             updateCharts();
             updateCacheInfo(currentData);
             showDataSections();
-
-            if (isNewCompany && typeof ResearchModule !== 'undefined') {
-                ResearchModule.resetState();
-            }
 
         } catch (error) {
             console.error('Load error:', error);
@@ -276,9 +281,8 @@ const App = (function() {
         if (companyInfo) companyInfo.classList.remove('d-none');
         if (dataToggle) dataToggle.classList.remove('d-none');
         if (chartsSection) chartsSection.classList.remove('d-none');
-        if (typeof ResearchModule !== 'undefined') {
-            document.getElementById('ai-research-section').classList.remove('d-none');
-        }
+        const aiSection = document.getElementById('ai-research-section');
+        if (aiSection) aiSection.classList.remove('d-none');
     }
 
     /**
@@ -288,9 +292,8 @@ const App = (function() {
         if (companyInfo) companyInfo.classList.add('d-none');
         if (dataToggle) dataToggle.classList.add('d-none');
         if (chartsSection) chartsSection.classList.add('d-none');
-        if (typeof ResearchModule !== 'undefined') {
-            document.getElementById('ai-research-section').classList.add('d-none');
-        }
+        const aiSection = document.getElementById('ai-research-section');
+        if (aiSection) aiSection.classList.add('d-none');
     }
 
     /**

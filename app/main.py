@@ -68,6 +68,12 @@ async def serve_index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
+@app.get("/research", response_class=HTMLResponse)
+async def serve_research(request: Request):
+    """Serve the AI research page"""
+    return templates.TemplateResponse("research.html", {"request": request})
+
+
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
