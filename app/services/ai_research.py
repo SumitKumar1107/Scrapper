@@ -9,8 +9,8 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 PROMPT_TEMPLATE_PATH = Path(__file__).parent.parent.parent / "research_prompt.txt"
-GEMINI_MODEL = "gemini-3-pro-preview"
-GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
+GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models"
+GEMINI_MODELS = ["gemini-3-pro-preview", "gemini-2.0-flash"]
 
 
 def load_prompt_template() -> str:
@@ -68,22 +68,29 @@ def generate_research(company_name: str) -> str:
         }
     }
 
-    resp = requests.post(
-        f"{GEMINI_API_URL}?key={api_key}",
-        json=payload,
-        timeout=120
-    )
+    last_error = None
+    for model in GEMINI_MODELS:
+        url = f"{GEMINI_API_BASE}/{model}:generateContent?key={api_key}"
+        logger.info(f"Trying model: {model}")
 
-    if resp.status_code != 200:
+        resp = requests.post(url, json=payload, timeout=120)
+
+        if resp.status_code == 200:
+            data = resp.json()
+            text = data["candidates"][0]["content"]["parts"][0]["text"]
+            if not text:
+                raise Exception("Gemini API returned an empty response")
+            logger.info(f"AI research generated successfully with {model}")
+            return text
+
         error_msg = resp.text
-        logger.error(f"Gemini API error {resp.status_code}: {error_msg}")
-        raise Exception(f"Gemini API error: {resp.status_code} - {error_msg}")
+        logger.warning(f"{model} failed ({resp.status_code}): {error_msg}")
+        last_error = f"Gemini API error: {resp.status_code} - {error_msg}"
 
-    data = resp.json()
-    text = data["candidates"][0]["content"]["parts"][0]["text"]
+        if "location" in error_msg.lower() and "not supported" in error_msg.lower():
+            logger.info(f"{model} not available in this region, trying next model")
+            continue
 
-    if not text:
-        raise Exception("Gemini API returned an empty response")
+        raise Exception(last_error)
 
-    logger.info(f"AI research generated successfully for: {company_name}")
-    return text
+    raise Exception(last_error)
