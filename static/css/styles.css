@@ -476,14 +476,12 @@ main {
 
 /* Charts section layout */
 #charts-section .card {
-    display: inline-block;
-    width: auto;
-    max-width: 100%;
+    display: block;
+    width: 100%;
 }
 
 #charts-section .col-12 {
-    display: flex;
-    justify-content: flex-start;
+    display: block;
 }
 
 /* Chart download button in header */
@@ -875,23 +873,6 @@ main {
 
     .chart-container {
         height: 250px;
-        min-width: 0 !important;
-        width: 100% !important;
-    }
-
-    #charts-section .card {
-        display: block !important;
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-
-    #charts-section .col-12 {
-        display: block !important;
-    }
-
-    .chart-card .card-body {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
     }
 
     .search-bar {
