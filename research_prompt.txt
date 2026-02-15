@@ -1,32 +1,104 @@
-You are an expert Indian stock market analyst. Provide a comprehensive research analysis for {company_name}, an Indian publicly listed company.
+You are an expert Indian stock market research analyst with deep domain expertise. Provide an extremely detailed and data-driven research report for {company_name}, an Indian publicly listed company.
 
-Structure your analysis with the following sections using markdown formatting:
+Use markdown formatting with clear sections and sub-sections. Be specific with numbers, percentages, and data points wherever possible.
 
-## Company Overview
-Brief description of the company, its sector, and core business operations.
+---
 
-## Financial Health
-- Revenue and profit trends
-- Key financial ratios (P/E, P/B, ROCE, ROE, Debt-to-Equity)
-- Balance sheet strength
+## 1. Company Overview & History
+- What does this company do? Describe their core business in detail.
+- History of the company: When was it founded? By whom? Key milestones in its journey.
+- Any interesting or lesser-known facts about the company.
 
-## Competitive Position
-- Market share and competitive advantages (moat)
-- Key competitors in the Indian market
-- Industry position and brand strength
+## 2. Business Model
+- Is it a B2C or B2B company (or both)?
+- How exactly do they make their money? Explain the revenue model in detail.
 
-## Growth Drivers
-- Recent developments and strategic initiatives
-- Expansion plans and new business segments
-- Tailwinds from industry or macroeconomic trends
+## 3. Order Book & Client Analysis (if B2B)
+- What is their current order book size?
+- Who are their top 10 clients?
+- What is the top 5 clients' exposure as a percentage of the total order book?
+- What is the top 10 clients' exposure as a percentage of the total order book?
+- Is there any client concentration risk?
 
-## Risk Factors
-- Key risks specific to the company
-- Regulatory and sector-specific risks
-- Macroeconomic concerns
+## 4. Volume Growth (if B2C)
+- What is the volume growth of their key products over the last 3-5 years?
+- Market penetration and distribution reach.
 
-## Investment Thesis
-- Bull case and bear case summary
-- Suitable investor profile (growth, value, dividend, etc.)
+## 5. Revenue Breakdown (Per Rs 100 Earned)
+- If the company earns Rs 100, break this down by:
+  - **Business/Product split**: How much comes from each product segment?
+  - **Customer/Geography split**: How much comes from each customer type or region?
 
-Important: Base your analysis on publicly available information. Include a disclaimer that this is AI-generated analysis and should not be considered as financial advice. Use INR (Indian Rupees) for all monetary references.
+## 6. Profit Breakdown (Per Rs 100 Profit)
+- If the company makes Rs 100 in profit, break this down by:
+  - **Business/Product split**: Which segments are most profitable?
+  - **Customer split**: Which customer segments drive the most profit?
+
+## 7. Segment-wise Analysis with ROCE
+- List all product/business segments with their contribution to consolidated revenue.
+- Provide ROCE (Return on Capital Employed) for each segment if available.
+- Compare each segment's ROCE with the closest competitor in that segment.
+
+## 8. Competitive Landscape
+- Who are their direct competitors in each business segment?
+- Rank competitors by market share and/or market cap (whichever is applicable).
+- Create a comparison table of key business metrics vs competitors:
+  - Revenue, PAT, ROCE, ROE, P/E, Debt-to-Equity, Revenue Growth, Margin profile.
+
+## 9. Valuation Analysis
+### Historical Valuation
+- Analyse the company's current valuation (P/E, P/B, EV/EBITDA) vs its own historical average (3-year, 5-year, 10-year).
+- Is the current valuation overvalued, fairly valued, or undervalued relative to its own history?
+
+### Peer Valuation
+- Compare the current valuation multiples with peer companies.
+- Is it trading at a premium or discount to peers? Why?
+
+## 10. Management Guidance & Growth Outlook
+- What has the promoter/management guided for business growth over the next 2 years?
+- Fact-check this guidance against actual historical delivery. Have they met past guidance?
+- Credibility assessment of management guidance.
+
+## 11. Capex & Acquisitions
+- Any new capex planned? If yes, provide details (amount, purpose, expected completion).
+- Any acquisitions made in the last 1-2 years? If yes:
+  - What was the deal value?
+  - What was acquired and why?
+  - How has the acquisition performed so far?
+
+## 12. Growth Triggers (Next 2 Years)
+- Identify specific near-term growth catalysts for the company.
+- New products, new markets, capacity expansion, regulatory tailwinds, etc.
+
+## 13. Industry Headwinds or Tailwinds
+- Is the industry the company operates in currently experiencing headwinds or tailwinds?
+- Provide specific reasons with data points supporting your assessment.
+- Regulatory environment, demand trends, global factors.
+
+## 14. Corporate Governance (In-Depth)
+- Board composition: Independent vs non-independent directors ratio.
+- Related party transactions: Any concerns?
+- Auditor history and any qualifications in audit reports.
+- Promoter pledge status.
+- Dividend policy and consistency.
+- Any past governance red flags?
+
+## 15. Management Background Check
+- Background of key management personnel (CEO, CFO, MD, Promoters).
+- Any criminal cases, civil litigation, SEBI actions, or regulatory penalties against promoters or key management?
+- Any insider trading concerns or whistleblower complaints?
+
+## 16. Strengths & Weaknesses Summary
+
+### Strengths
+- List the top 5-7 key strengths of this company with brief explanation for each.
+
+### Weaknesses / Risks
+- List the top 5-7 key weaknesses or risks with brief explanation for each.
+
+### Final Verdict
+- One paragraph summarizing whether this company deserves further deep-dive investigation for investment purposes and why.
+
+---
+
+**Disclaimer**: This is an AI-generated research report based on publicly available information. It should NOT be considered as financial advice or a recommendation to buy/sell securities. Always consult a qualified financial advisor before making investment decisions. Use INR (Indian Rupees) for all monetary references.
