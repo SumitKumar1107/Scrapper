@@ -67,27 +67,11 @@ const ChartsModule = (function() {
         danger: '#ef4444'
     };
 
-    // Calculate chart width based on number of data points
-    function calculateChartWidth(numPeriods, minWidthPerBar = 50, minWidth = 300, maxWidth = null) {
-        const calculatedWidth = Math.max(minWidth, numPeriods * minWidthPerBar + 150);
-        if (maxWidth) {
-            return Math.min(calculatedWidth, maxWidth);
-        }
-        return calculatedWidth;
-    }
-
-    // Set container width and render chart
+    // Set container width - always fill parent
     function setContainerWidth(containerId, numPeriods) {
         const container = document.getElementById(containerId);
         if (container) {
-            const width = calculateChartWidth(numPeriods);
-            const parentWidth = container.parentElement.offsetWidth;
-            // Only constrain if calculated width is less than parent
-            if (width < parentWidth) {
-                container.style.width = width + 'px';
-            } else {
-                container.style.width = '100%';
-            }
+            container.style.width = '100%';
         }
     }
 
@@ -129,7 +113,7 @@ const ChartsModule = (function() {
                 ...baseLayout.xaxis,
                 tickangle: -45,
                 range: [-0.5, data.periods.length - 0.5],
-                dtick: 1
+                tickmode: 'auto', nticks: 8
             }
         };
 
@@ -178,7 +162,7 @@ const ChartsModule = (function() {
                 ...baseLayout.xaxis,
                 tickangle: -45,
                 range: [-0.5, data.periods.length - 0.5],
-                dtick: 1
+                tickmode: 'auto', nticks: 8
             }
         };
 
@@ -467,7 +451,7 @@ const ChartsModule = (function() {
                 ...baseLayout.xaxis,
                 tickangle: -45,
                 range: [-0.5, data.periods.length - 0.5],
-                dtick: 1
+                tickmode: 'auto', nticks: 8
             },
             legend: {
                 ...baseLayout.legend,
@@ -513,7 +497,7 @@ const ChartsModule = (function() {
                 ...baseLayout.xaxis,
                 tickangle: -45,
                 range: [-0.5, data.periods.length - 0.5],
-                dtick: 1
+                tickmode: 'auto', nticks: 8
             }
         };
 
