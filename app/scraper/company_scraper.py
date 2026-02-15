@@ -32,8 +32,19 @@ class CompanyScraper(BaseScraper):
 
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        company_info = self._parse_company_info(soup, ticker)
         quarterly_data = self._parse_quarterly_data(soup)
+
+        # If consolidated page returned empty data, retry with standalone
+        if not quarterly_data.periods and url.endswith('/consolidated/'):
+            url = f"/company/{ticker}/"
+            try:
+                response = self.get(url)
+                soup = BeautifulSoup(response.text, 'html.parser')
+                quarterly_data = self._parse_quarterly_data(soup)
+            except Exception:
+                pass
+
+        company_info = self._parse_company_info(soup, ticker)
         annual_data = self._parse_annual_data(soup)
         cash_flow_data = self._parse_cash_flow_data(soup)
         shareholding_quarterly, shareholding_yearly = self._parse_shareholding_data(soup)
