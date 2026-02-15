@@ -57,7 +57,7 @@ def generate_research(company_name: str) -> str:
     prompt = template.replace("{company_name}", company_name)
 
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-2.5-flash")
+    model = genai.GenerativeModel("gemini-3-pro-preview")
 
     logger.info(f"Generating AI research for: {company_name}")
 
@@ -65,7 +65,7 @@ def generate_research(company_name: str) -> str:
         prompt,
         generation_config=genai.types.GenerationConfig(
             temperature=0.7,
-            max_output_tokens=4096,
+            max_output_tokens=65536,
         )
     )
 

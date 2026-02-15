@@ -70,6 +70,7 @@ const App = (function() {
         if (!ticker) return;
 
         ticker = ticker.toUpperCase().trim();
+        const isNewCompany = ticker !== currentTicker;
         currentTicker = ticker;
 
         showLoading();
@@ -98,6 +99,10 @@ const App = (function() {
             updateCharts();
             updateCacheInfo(currentData);
             showDataSections();
+
+            if (isNewCompany && typeof ResearchModule !== 'undefined') {
+                ResearchModule.resetState();
+            }
 
         } catch (error) {
             console.error('Load error:', error);
@@ -271,7 +276,9 @@ const App = (function() {
         if (companyInfo) companyInfo.classList.remove('d-none');
         if (dataToggle) dataToggle.classList.remove('d-none');
         if (chartsSection) chartsSection.classList.remove('d-none');
-        if (typeof ResearchModule !== 'undefined') ResearchModule.show();
+        if (typeof ResearchModule !== 'undefined') {
+            document.getElementById('ai-research-section').classList.remove('d-none');
+        }
     }
 
     /**
@@ -281,7 +288,9 @@ const App = (function() {
         if (companyInfo) companyInfo.classList.add('d-none');
         if (dataToggle) dataToggle.classList.add('d-none');
         if (chartsSection) chartsSection.classList.add('d-none');
-        if (typeof ResearchModule !== 'undefined') ResearchModule.hide();
+        if (typeof ResearchModule !== 'undefined') {
+            document.getElementById('ai-research-section').classList.add('d-none');
+        }
     }
 
     /**
