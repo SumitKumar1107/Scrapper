@@ -865,8 +865,8 @@ main {
 /* Phone (576px) */
 @media (max-width: 576px) {
     main.container {
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
     }
 
     .hero-title {
@@ -875,6 +875,23 @@ main {
 
     .chart-container {
         height: 250px;
+        min-width: 0 !important;
+        width: 100% !important;
+    }
+
+    #charts-section .card {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    #charts-section .col-12 {
+        display: block !important;
+    }
+
+    .chart-card .card-body {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .search-bar {
