@@ -1,16 +1,22 @@
 import os
 import logging
+import socket
 from pathlib import Path
 from dotenv import load_dotenv
 import requests
+from urllib3.util.connection import allowed_gai_family
+
+# Force IPv4 to avoid Render IPv6 being misidentified by Google
+import urllib3.util.connection
+urllib3.util.connection.allowed_gai_family = lambda: socket.AF_INET
 
 load_dotenv()
 
 logger = logging.getLogger(__name__)
 
 PROMPT_TEMPLATE_PATH = Path(__file__).parent.parent.parent / "research_prompt.txt"
-GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models"
-GEMINI_MODELS = ["gemini-3-pro-preview", "gemini-2.0-flash"]
+GEMINI_MODEL = "gemini-3-pro-preview"
+GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
 
 
 def load_prompt_template() -> str:
@@ -68,29 +74,22 @@ def generate_research(company_name: str) -> str:
         }
     }
 
-    last_error = None
-    for model in GEMINI_MODELS:
-        url = f"{GEMINI_API_BASE}/{model}:generateContent?key={api_key}"
-        logger.info(f"Trying model: {model}")
+    resp = requests.post(
+        f"{GEMINI_API_URL}?key={api_key}",
+        json=payload,
+        timeout=120
+    )
 
-        resp = requests.post(url, json=payload, timeout=120)
-
-        if resp.status_code == 200:
-            data = resp.json()
-            text = data["candidates"][0]["content"]["parts"][0]["text"]
-            if not text:
-                raise Exception("Gemini API returned an empty response")
-            logger.info(f"AI research generated successfully with {model}")
-            return text
-
+    if resp.status_code != 200:
         error_msg = resp.text
-        logger.warning(f"{model} failed ({resp.status_code}): {error_msg}")
-        last_error = f"Gemini API error: {resp.status_code} - {error_msg}"
+        logger.error(f"Gemini API error {resp.status_code}: {error_msg}")
+        raise Exception(f"Gemini API error: {resp.status_code} - {error_msg}")
 
-        if "location" in error_msg.lower() and "not supported" in error_msg.lower():
-            logger.info(f"{model} not available in this region, trying next model")
-            continue
+    data = resp.json()
+    text = data["candidates"][0]["content"]["parts"][0]["text"]
 
-        raise Exception(last_error)
+    if not text:
+        raise Exception("Gemini API returned an empty response")
 
-    raise Exception(last_error)
+    logger.info(f"AI research generated successfully for: {company_name}")
+    return text
