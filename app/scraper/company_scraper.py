@@ -4,7 +4,7 @@ import re
 from .base import BaseScraper
 from .parsers import TableParser
 from app.models.company import CompanyInfo
-from app.models.financial import FinancialData, CompanyData
+from app.models.financial import FinancialData, CompanyData, ShareholdingData
 
 
 class CompanyScraper(BaseScraper):
@@ -36,6 +36,7 @@ class CompanyScraper(BaseScraper):
         quarterly_data = self._parse_quarterly_data(soup)
         annual_data = self._parse_annual_data(soup)
         cash_flow_data = self._parse_cash_flow_data(soup)
+        shareholding_quarterly, shareholding_yearly = self._parse_shareholding_data(soup)
 
         # Merge cash flow data into annual data
         if cash_flow_data.periods:
@@ -47,7 +48,9 @@ class CompanyScraper(BaseScraper):
         return CompanyData(
             company_info=company_info,
             quarterly_data=quarterly_data,
-            annual_data=annual_data
+            annual_data=annual_data,
+            shareholding_quarterly=shareholding_quarterly,
+            shareholding_yearly=shareholding_yearly
         )
 
     def _parse_company_info(self, soup: BeautifulSoup, ticker: str) -> CompanyInfo:
@@ -347,6 +350,107 @@ class CompanyScraper(BaseScraper):
 
         table = section.find('table')
         return TableParser.parse_financial_table(table) if table else self._empty_financial_data()
+
+    def _parse_shareholding_data(self, soup: BeautifulSoup) -> tuple:
+        """
+        Parse shareholding pattern table (quarterly and yearly).
+
+        Args:
+            soup: BeautifulSoup object
+
+        Returns:
+            Tuple of (ShareholdingData quarterly, ShareholdingData yearly)
+        """
+        section = soup.find('section', id='shareholding')
+        if not section:
+            section = soup.find('section', {'id': re.compile(r'sharehold', re.I)})
+
+        if not section:
+            self.logger.warning("Shareholding section not found")
+            empty = ShareholdingData()
+            return empty, empty
+
+        results = []
+
+        # The section may have multiple tables or a single table with
+        # buttons to toggle quarterly/yearly. Look for all tables.
+        tables = section.find_all('table')
+
+        for table in tables[:2]:  # At most quarterly + yearly
+            if not table:
+                continue
+
+            # Parse header periods
+            header_row = table.select_one('thead tr')
+            if not header_row:
+                continue
+
+            periods = []
+            for th in header_row.find_all('th')[1:]:
+                period = th.get_text(strip=True)
+                if period:
+                    periods.append(period)
+
+            if not periods:
+                continue
+
+            # Row label mapping for shareholding
+            row_map = {
+                'promoters': 'promoters',
+                'promoter': 'promoters',
+                'fiis': 'fiis',
+                'fii': 'fiis',
+                'foreign institutions': 'fiis',
+                'diis': 'diis',
+                'dii': 'diis',
+                'domestic institutions': 'diis',
+                'government': 'government',
+                'public': 'public',
+                'retail': 'public',
+            }
+
+            data = {field: [None] * len(periods) for field in ['promoters', 'fiis', 'diis', 'government', 'public']}
+
+            rows = table.select('tbody tr')
+            for row in rows:
+                cells = row.find_all(['td', 'th'])
+                if not cells:
+                    continue
+
+                label = cells[0].get_text(strip=True)
+                label_clean = re.sub(r'\s*\+$', '', label).strip().lower()
+
+                field = None
+                for key, field_name in row_map.items():
+                    if key in label_clean:
+                        field = field_name
+                        break
+
+                if not field:
+                    continue
+
+                values = []
+                for cell in cells[1:]:
+                    text = cell.get_text(strip=True)
+                    val = self._parse_number(text)
+                    values.append(val)
+
+                data[field] = values[:len(periods)]
+
+            results.append(ShareholdingData(
+                periods=periods,
+                promoters=data['promoters'],
+                fiis=data['fiis'],
+                diis=data['diis'],
+                government=data['government'],
+                public=data['public']
+            ))
+
+        # If only one table found, use it for quarterly and return empty for yearly
+        quarterly = results[0] if len(results) > 0 else ShareholdingData()
+        yearly = results[1] if len(results) > 1 else ShareholdingData()
+
+        return quarterly, yearly
 
     def _parse_number(self, text: Optional[str]) -> Optional[float]:
         """

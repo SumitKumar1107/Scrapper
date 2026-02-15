@@ -524,10 +524,99 @@ const ChartsModule = (function() {
     }
 
     /**
+     * Render Shareholding Pattern chart (line or stacked area)
+     */
+    function renderShareholdingChart(data, companyName, chartType = 'line', containerId = 'shareholding-chart') {
+        if (!data || !data.periods || data.periods.length === 0) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                        <div class="text-center">
+                            <i class="bi bi-people fs-1 mb-2 d-block"></i>
+                            <p class="mb-0">Shareholding pattern data not available for this company</p>
+                        </div>
+                    </div>
+                `;
+            }
+            return;
+        }
+
+        setContainerWidth(containerId, data.periods.length);
+
+        const categories = [
+            { key: 'promoters', name: 'Promoters', color: '#0d6efd' },
+            { key: 'fiis', name: 'FIIs', color: '#198754' },
+            { key: 'diis', name: 'DIIs', color: '#fd7e14' },
+            { key: 'government', name: 'Government', color: '#6f42c1' },
+            { key: 'public', name: 'Public', color: '#dc3545' }
+        ];
+
+        const traces = [];
+        const isArea = chartType === 'area';
+
+        categories.forEach((cat, idx) => {
+            const values = data[cat.key];
+            if (!values || values.every(v => v == null)) return;
+
+            const trace = {
+                x: data.periods,
+                y: values,
+                type: 'scatter',
+                name: cat.name,
+                line: { color: cat.color, width: 2 },
+                marker: { size: isArea ? 0 : 7 },
+                hovertemplate: `<b>%{x}</b><br>${cat.name}: %{y:.2f}%<extra></extra>`
+            };
+
+            if (isArea) {
+                trace.mode = 'lines';
+                trace.stackgroup = 'one';
+                trace.fillcolor = cat.color + '99';
+            } else {
+                trace.mode = 'lines+markers';
+            }
+
+            traces.push(trace);
+        });
+
+        if (traces.length === 0) {
+            showNoData(containerId);
+            return;
+        }
+
+        const title = companyName
+            ? `Shareholding Pattern - ${companyName}`
+            : 'Shareholding Pattern';
+
+        const layout = {
+            ...baseLayout,
+            yaxis: {
+                ...baseLayout.yaxis,
+                title: { text: 'Shareholding (%)', standoff: 10 },
+                tickformat: '.1f',
+                ticksuffix: '%',
+                range: isArea ? [0, 100] : undefined
+            },
+            xaxis: {
+                ...baseLayout.xaxis,
+                tickangle: -45,
+                range: [-0.5, data.periods.length - 0.5]
+            },
+            legend: {
+                ...baseLayout.legend,
+                y: -0.25
+            }
+        };
+
+        Plotly.newPlot(containerId, traces, layout, chartConfig);
+    }
+
+    /**
      * Scroll chart containers to the right (show latest data)
      */
     function scrollChartsToRight() {
-        const chartIds = ['sales-chart', 'profit-chart', 'margins-chart', 'eps-chart', 'breakdown-chart', 'cashflow-chart'];
+        const chartIds = ['sales-chart', 'profit-chart', 'margins-chart', 'eps-chart', 'breakdown-chart', 'cashflow-chart', 'shareholding-chart'];
         chartIds.forEach(id => {
             const container = document.getElementById(id);
             if (container && container.parentElement) {
@@ -557,7 +646,7 @@ const ChartsModule = (function() {
      * Resize all charts (call on window resize)
      */
     function resizeCharts() {
-        const chartIds = ['sales-chart', 'profit-chart', 'margins-chart', 'eps-chart', 'breakdown-chart', 'cashflow-chart'];
+        const chartIds = ['sales-chart', 'profit-chart', 'margins-chart', 'eps-chart', 'breakdown-chart', 'cashflow-chart', 'shareholding-chart'];
         chartIds.forEach(id => {
             const container = document.getElementById(id);
             if (container && container.data) {
@@ -582,6 +671,7 @@ const ChartsModule = (function() {
         renderEPSChart: renderEPSChart,
         renderSalesBreakdownChart: renderSalesBreakdownChart,
         renderCashFlowChart: renderCashFlowChart,
+        renderShareholdingChart: renderShareholdingChart,
         resizeCharts: resizeCharts
     };
 })();

@@ -7,6 +7,8 @@ const App = (function() {
     let currentData = null;
     let currentTicker = null;
     let currentPeriod = 'quarterly';
+    let shPeriod = 'quarterly';
+    let shChartType = 'line';
 
     // DOM elements
     let loadingSpinner;
@@ -39,6 +41,22 @@ const App = (function() {
                 if (currentData) {
                     updateCharts();
                 }
+            });
+        });
+
+        // Shareholding period toggle
+        document.querySelectorAll('input[name="sh-period"]').forEach(radio => {
+            radio.addEventListener('change', function(e) {
+                shPeriod = e.target.value;
+                if (currentData) updateShareholdingChart();
+            });
+        });
+
+        // Shareholding chart type toggle
+        document.querySelectorAll('input[name="sh-type"]').forEach(radio => {
+            radio.addEventListener('change', function(e) {
+                shChartType = e.target.value;
+                if (currentData) updateShareholdingChart();
             });
         });
 
@@ -184,6 +202,26 @@ const App = (function() {
 
         // Always use annual data for cash flow (not available in quarterly)
         ChartsModule.renderAllCharts(data, currentData.annual_data);
+
+        // Shareholding chart (independent of main period toggle)
+        updateShareholdingChart();
+    }
+
+    /**
+     * Update shareholding chart based on its own toggles
+     */
+    function updateShareholdingChart() {
+        const shData = shPeriod === 'quarterly'
+            ? currentData.shareholding_quarterly
+            : currentData.shareholding_yearly;
+
+        const companyName = currentData.company_info ? currentData.company_info.name : '';
+        const titleEl = document.getElementById('shareholding-title');
+        if (titleEl) {
+            titleEl.textContent = `Shareholding Pattern - ${companyName || ''}`.trim();
+        }
+
+        ChartsModule.renderShareholdingChart(shData, companyName, shChartType);
     }
 
     /**
