@@ -281,6 +281,8 @@ const App = (function() {
         if (companyInfo) companyInfo.classList.remove('d-none');
         if (dataToggle) dataToggle.classList.remove('d-none');
         if (chartsSection) chartsSection.classList.remove('d-none');
+        // Resize charts after section becomes visible so Plotly gets correct width
+        setTimeout(function() { ChartsModule.resizeCharts(); }, 50);
     }
 
     /**
