@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Data Scraper - Screener.in Data</title>
+    <title>FinSight - Indian Stock Analysis</title>
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -14,11 +18,13 @@
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="/">
-                <i class="bi bi-graph-up-arrow me-2"></i>
-                Financial Data Scraper
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <span class="brand-icon me-2">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </span>
+                <span class="brand-text">FinSight</span>
             </a>
         </div>
     </nav>
@@ -26,44 +32,45 @@
     <!-- Main Content -->
     <main class="container my-4">
         <!-- Search Section -->
-        <section id="search-section" class="row justify-content-center mb-4">
-            <div class="col-md-8 col-lg-6">
-                <h2 class="text-center mb-4">Search Indian Stocks</h2>
-                <div class="search-container position-relative">
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text bg-white border-end-0">
-                            <i class="bi bi-search text-muted"></i>
-                        </span>
-                        <input type="text"
-                               id="search-input"
-                               class="form-control border-start-0"
-                               placeholder="Search company (e.g., Reliance, TCS, Infosys)"
-                               autocomplete="off">
-                        <button class="btn btn-primary" id="search-btn" type="button">
-                            <i class="bi bi-arrow-right"></i>
-                        </button>
+        <section id="search-section" class="hero-search text-center mb-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <h1 class="hero-title mb-2">Analyze Indian Stocks</h1>
+                    <p class="hero-subtitle mb-4">Real-time financials, charts, and AI-powered research</p>
+                    <div class="search-container position-relative">
+                        <div class="search-bar">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text"
+                                   id="search-input"
+                                   class="search-input"
+                                   placeholder="Search company or ticker (e.g., Reliance, TCS)"
+                                   autocomplete="off">
+                            <button class="search-btn" id="search-btn" type="button">
+                                <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                        <!-- Autocomplete Dropdown -->
+                        <div id="autocomplete-dropdown" class="autocomplete-dropdown d-none">
+                        </div>
                     </div>
-                    <!-- Autocomplete Dropdown -->
-                    <div id="autocomplete-dropdown" class="autocomplete-dropdown d-none">
-                        <!-- Results populated by JavaScript -->
-                    </div>
+                    <p class="text-muted text-center mt-3 small">
+                        <i class="bi bi-lightning-charge me-1"></i>
+                        Data from screener.in - updated in real-time
+                    </p>
                 </div>
-                <p class="text-muted text-center mt-2 small">
-                    Enter company name or stock ticker symbol
-                </p>
             </div>
         </section>
 
         <!-- Loading Spinner -->
         <div id="loading-spinner" class="text-center d-none my-5">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <p class="mt-3 text-muted">Fetching financial data...</p>
+            <p class="mt-3">Fetching financial data...</p>
         </div>
 
         <!-- Error Alert -->
-        <div id="error-alert" class="alert alert-danger d-none mx-auto" style="max-width: 600px;" role="alert">
+        <div id="error-alert" class="d-none mx-auto" style="max-width: 600px;" role="alert">
             <div class="d-flex align-items-center">
                 <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
                 <div>
@@ -74,23 +81,26 @@
         </div>
 
         <!-- Company Info Card -->
-        <section id="company-info" class="d-none mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <div class="row align-items-center">
+        <section id="company-info" class="d-none mb-4 fade-in-section">
+            <div class="card company-card">
+                <div class="card-body p-4">
+                    <!-- Top Row: Company Name + Price -->
+                    <div class="row align-items-start">
                         <div class="col">
-                            <h2 id="company-name" class="card-title mb-1 h3"></h2>
-                            <p class="text-muted mb-0">
-                                <span id="company-ticker" class="badge bg-secondary me-2"></span>
-                                <span class="me-3">BSE: <span id="bse-code">-</span></span>
-                                <span>NSE: <span id="nse-code">-</span></span>
+                            <div class="d-flex align-items-center mb-1">
+                                <h2 id="company-name" class="company-title mb-0 me-3"></h2>
+                                <span id="company-ticker" class="ticker-badge"></span>
+                            </div>
+                            <p class="exchange-codes mb-0">
+                                <span class="me-3"><span class="label">BSE</span> <span id="bse-code">-</span></span>
+                                <span><span class="label">NSE</span> <span id="nse-code">-</span></span>
                             </p>
                         </div>
                         <div class="col-auto text-end">
-                            <h3 id="current-price" class="mb-0 h2"></h3>
-                            <span id="price-change" class="badge fs-6"></span>
-                            <div class="mt-2">
-                                <button id="generate-research-btn" class="btn btn-primary btn-sm">
+                            <div id="current-price" class="price-display"></div>
+                            <span id="price-change" class="badge price-badge"></span>
+                            <div class="mt-3">
+                                <button id="generate-research-btn" class="btn-ai-research">
                                     <i class="bi bi-stars me-1"></i>
                                     AI Research
                                 </button>
@@ -98,49 +108,51 @@
                         </div>
                     </div>
 
+                    <!-- Divider -->
+                    <div class="section-divider my-3"></div>
+
                     <!-- Key Ratios -->
-                    <hr class="my-3">
                     <div class="row text-center g-2" id="key-ratios">
                         <div class="col-4 col-lg mb-2">
                             <div class="ratio-card">
-                                <small class="text-muted d-block">Market Cap</small>
-                                <span id="market-cap" class="fw-bold">-</span>
+                                <span class="ratio-label">Market Cap</span>
+                                <span id="market-cap" class="ratio-value">-</span>
                             </div>
                         </div>
                         <div class="col-4 col-lg mb-2">
                             <div class="ratio-card">
-                                <small class="text-muted d-block">P/E</small>
-                                <span id="pe-ratio" class="fw-bold">-</span>
+                                <span class="ratio-label">P/E</span>
+                                <span id="pe-ratio" class="ratio-value">-</span>
                             </div>
                         </div>
                         <div class="col-4 col-lg mb-2">
                             <div class="ratio-card">
-                                <small class="text-muted d-block">P/B</small>
-                                <span id="pb-ratio" class="fw-bold">-</span>
+                                <span class="ratio-label">P/B</span>
+                                <span id="pb-ratio" class="ratio-value">-</span>
                             </div>
                         </div>
                         <div class="col-4 col-lg mb-2">
                             <div class="ratio-card">
-                                <small class="text-muted d-block">ROCE</small>
-                                <span id="roce" class="fw-bold">-</span>
+                                <span class="ratio-label">ROCE</span>
+                                <span id="roce" class="ratio-value">-</span>
                             </div>
                         </div>
                         <div class="col-4 col-lg mb-2">
                             <div class="ratio-card">
-                                <small class="text-muted d-block">ROE</small>
-                                <span id="roe" class="fw-bold">-</span>
+                                <span class="ratio-label">ROE</span>
+                                <span id="roe" class="ratio-value">-</span>
                             </div>
                         </div>
                         <div class="col-4 col-lg mb-2">
                             <div class="ratio-card">
-                                <small class="text-muted d-block">Debt</small>
-                                <span id="debt" class="fw-bold">-</span>
+                                <span class="ratio-label">Debt</span>
+                                <span id="debt" class="ratio-value">-</span>
                             </div>
                         </div>
                         <div class="col-4 col-lg mb-2">
                             <div class="ratio-card">
-                                <small class="text-muted d-block">D/E</small>
-                                <span id="debt-to-equity" class="fw-bold">-</span>
+                                <span class="ratio-label">D/E</span>
+                                <span id="debt-to-equity" class="ratio-value">-</span>
                             </div>
                         </div>
                     </div>
@@ -149,26 +161,25 @@
         </section>
 
         <!-- Data Toggle and Cache Info -->
-        <section id="data-toggle" class="d-none mb-4">
-            <div class="d-flex justify-content-between align-items-center flex-wrap">
-                <div class="btn-group" role="group" aria-label="Data period toggle">
+        <section id="data-toggle" class="d-none mb-4 fade-in-section">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div class="toggle-group" role="group" aria-label="Data period toggle">
                     <input type="radio" class="btn-check" name="period" id="period-quarterly" value="quarterly" checked>
-                    <label class="btn btn-outline-primary" for="period-quarterly">
+                    <label class="toggle-btn" for="period-quarterly">
                         <i class="bi bi-calendar3 me-1"></i> Quarterly
                     </label>
-
                     <input type="radio" class="btn-check" name="period" id="period-annual" value="annual">
-                    <label class="btn btn-outline-primary" for="period-annual">
+                    <label class="toggle-btn" for="period-annual">
                         <i class="bi bi-calendar-range me-1"></i> Annual
                     </label>
                 </div>
 
-                <div class="mt-2 mt-md-0">
-                    <span id="cache-info" class="text-muted small">
+                <div class="cache-info-group d-flex align-items-center">
+                    <span id="cache-info" class="cache-chip">
                         <i class="bi bi-clock-history me-1"></i>
                         <span id="cache-time"></span>
                     </span>
-                    <button id="refresh-btn" class="btn btn-sm btn-outline-secondary ms-2" title="Refresh data">
+                    <button id="refresh-btn" class="refresh-btn ms-2" title="Refresh data">
                         <i class="bi bi-arrow-clockwise"></i>
                     </button>
                 </div>
@@ -176,14 +187,16 @@
         </section>
 
         <!-- Charts Section -->
-        <section id="charts-section" class="d-none">
+        <section id="charts-section" class="d-none fade-in-section">
             <div class="row">
                 <!-- Sales Chart -->
                 <div class="col-lg-6 col-12 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">
-                                <i class="bi bi-bar-chart-fill text-primary me-2"></i>
+                    <div class="card chart-card chart-accent-indigo">
+                        <div class="card-header chart-header">
+                            <h5 class="mb-0 d-flex align-items-center">
+                                <span class="chart-icon chart-icon-indigo">
+                                    <i class="bi bi-bar-chart-fill"></i>
+                                </span>
                                 Revenue / Sales
                             </h5>
                         </div>
@@ -195,10 +208,12 @@
 
                 <!-- Sales Breakdown Chart -->
                 <div class="col-lg-6 col-12 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">
-                                <i class="bi bi-pie-chart-fill text-danger me-2"></i>
+                    <div class="card chart-card chart-accent-pink">
+                        <div class="card-header chart-header">
+                            <h5 class="mb-0 d-flex align-items-center">
+                                <span class="chart-icon chart-icon-pink">
+                                    <i class="bi bi-pie-chart-fill"></i>
+                                </span>
                                 Sales Breakdown
                             </h5>
                         </div>
@@ -210,10 +225,12 @@
 
                 <!-- Operating Profit Chart -->
                 <div class="col-lg-6 col-12 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">
-                                <i class="bi bi-graph-up text-success me-2"></i>
+                    <div class="card chart-card chart-accent-emerald">
+                        <div class="card-header chart-header">
+                            <h5 class="mb-0 d-flex align-items-center">
+                                <span class="chart-icon chart-icon-emerald">
+                                    <i class="bi bi-graph-up"></i>
+                                </span>
                                 Operating & Net Profit
                             </h5>
                         </div>
@@ -225,10 +242,12 @@
 
                 <!-- Margins Chart -->
                 <div class="col-lg-6 col-12 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">
-                                <i class="bi bi-percent text-info me-2"></i>
+                    <div class="card chart-card chart-accent-cyan">
+                        <div class="card-header chart-header">
+                            <h5 class="mb-0 d-flex align-items-center">
+                                <span class="chart-icon chart-icon-cyan">
+                                    <i class="bi bi-percent"></i>
+                                </span>
                                 Profit Margins
                             </h5>
                         </div>
@@ -240,10 +259,12 @@
 
                 <!-- Cash Flow Chart -->
                 <div class="col-lg-6 col-12 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">
-                                <i class="bi bi-cash-stack text-success me-2"></i>
+                    <div class="card chart-card chart-accent-emerald">
+                        <div class="card-header chart-header">
+                            <h5 class="mb-0 d-flex align-items-center">
+                                <span class="chart-icon chart-icon-emerald">
+                                    <i class="bi bi-cash-stack"></i>
+                                </span>
                                 Cash Flow from Operations
                             </h5>
                         </div>
@@ -255,10 +276,12 @@
 
                 <!-- EPS Chart -->
                 <div class="col-lg-6 col-12 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">
-                                <i class="bi bi-cash-coin text-warning me-2"></i>
+                    <div class="card chart-card chart-accent-amber">
+                        <div class="card-header chart-header">
+                            <h5 class="mb-0 d-flex align-items-center">
+                                <span class="chart-icon chart-icon-amber">
+                                    <i class="bi bi-cash-coin"></i>
+                                </span>
                                 Earnings Per Share (EPS)
                             </h5>
                         </div>
@@ -270,10 +293,12 @@
 
                 <!-- Shareholding Pattern Chart -->
                 <div class="col-lg-6 col-12 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">
-                                <i class="bi bi-people-fill text-primary me-2"></i>
+                    <div class="card chart-card chart-accent-violet">
+                        <div class="card-header chart-header">
+                            <h5 class="mb-0 d-flex align-items-center">
+                                <span class="chart-icon chart-icon-violet">
+                                    <i class="bi bi-people-fill"></i>
+                                </span>
                                 Shareholding Pattern
                             </h5>
                         </div>
@@ -288,19 +313,17 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-light py-4 mt-5 border-top">
+    <footer class="site-footer">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6 text-center text-md-start">
-                    <small class="text-muted">
-                        <i class="bi bi-info-circle me-1"></i>
+                    <small>
+                        <i class="bi bi-database me-1"></i>
                         Data sourced from <a href="https://www.screener.in" target="_blank" rel="noopener">screener.in</a>
                     </small>
                 </div>
                 <div class="col-md-6 text-center text-md-end mt-2 mt-md-0">
-                    <small class="text-muted">
-                        For educational purposes only
-                    </small>
+                    <small>For educational purposes only</small>
                 </div>
             </div>
         </div>
@@ -311,8 +334,8 @@
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
-    <script src="/static/js/search.js?v=1707500010"></script>
-    <script src="/static/js/charts.js?v=1707500010"></script>
-    <script src="/static/js/app.js?v=1707500010"></script>
+    <script src="/static/js/search.js?v=1707500020"></script>
+    <script src="/static/js/charts.js?v=1707500020"></script>
+    <script src="/static/js/app.js?v=1707500020"></script>
 </body>
 </html>

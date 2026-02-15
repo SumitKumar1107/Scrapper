@@ -18,7 +18,7 @@ const ChartsModule = (function() {
         }
     };
 
-    // Base layout configuration
+    // Base layout configuration - dark theme
     const baseLayout = {
         margin: { t: 50, r: 60, b: 120, l: 100 },
         showlegend: true,
@@ -27,51 +27,51 @@ const ChartsModule = (function() {
             y: -0.2,
             x: 0.5,
             xanchor: 'center',
-            font: { color: '#333333' }
+            font: { color: '#cbd5e1' }
         },
         hovermode: 'x unified',
-        paper_bgcolor: '#ffffff',
-        plot_bgcolor: '#ffffff',
+        paper_bgcolor: '#111827',
+        plot_bgcolor: '#111827',
         font: {
-            family: 'system-ui, -apple-system, sans-serif',
+            family: 'Inter, system-ui, -apple-system, sans-serif',
             size: 12,
-            color: '#333333'
+            color: '#cbd5e1'
         },
         xaxis: {
             showgrid: false,
             showline: true,
-            linecolor: '#dee2e6',
+            linecolor: 'rgba(255, 255, 255, 0.08)',
             automargin: true,
-            tickfont: { size: 11, color: '#333333' },
-            title: { font: { color: '#333333' } }
+            tickfont: { size: 11, color: '#94a3b8' },
+            title: { font: { color: '#cbd5e1' } }
         },
         yaxis: {
             showgrid: true,
-            gridcolor: '#f0f0f0',
+            gridcolor: 'rgba(255, 255, 255, 0.06)',
             showline: true,
-            linecolor: '#dee2e6',
+            linecolor: 'rgba(255, 255, 255, 0.08)',
             zeroline: true,
-            zerolinecolor: '#dee2e6',
+            zerolinecolor: 'rgba(255, 255, 255, 0.1)',
             automargin: true,
-            tickfont: { color: '#333333' },
-            title: { font: { color: '#333333' } }
+            tickfont: { color: '#94a3b8' },
+            title: { font: { color: '#cbd5e1' } }
         },
         bargap: 0.3,
         bargroupgap: 0.1
     };
 
-    // Color palette
+    // Color palette - dark theme
     const colors = {
-        primary: '#0d6efd',
-        success: '#198754',
-        info: '#0dcaf0',
-        warning: '#fd7e14',
-        purple: '#6f42c1',
-        danger: '#dc3545'
+        primary: '#6366f1',
+        success: '#10b981',
+        info: '#06b6d4',
+        warning: '#f59e0b',
+        purple: '#8b5cf6',
+        danger: '#ef4444'
     };
 
     // Calculate chart width based on number of data points
-    function calculateChartWidth(numPeriods, minWidthPerBar = 50, minWidth = 400, maxWidth = null) {
+    function calculateChartWidth(numPeriods, minWidthPerBar = 50, minWidth = 300, maxWidth = null) {
         const calculatedWidth = Math.max(minWidth, numPeriods * minWidthPerBar + 150);
         if (maxWidth) {
             return Math.min(calculatedWidth, maxWidth);
@@ -295,7 +295,7 @@ const ChartsModule = (function() {
             line: { color: colors.warning, width: 3 },
             marker: { size: 10, color: colors.warning },
             fill: 'tozeroy',
-            fillcolor: 'rgba(253, 126, 20, 0.1)',
+            fillcolor: 'rgba(245, 158, 11, 0.08)',
             hovertemplate: '<b>%{x}</b><br>EPS: Rs %{y:.2f}<extra></extra>'
         };
 
@@ -324,7 +324,7 @@ const ChartsModule = (function() {
         const container = document.getElementById(containerId);
         if (container) {
             container.innerHTML = `
-                <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                <div class="d-flex align-items-center justify-content-center h-100" style="color: #64748b;">
                     <div class="text-center">
                         <i class="bi bi-bar-chart fs-1 mb-2 d-block"></i>
                         <p class="mb-0">No data available</p>
@@ -375,7 +375,7 @@ const ChartsModule = (function() {
                 y: data.material_cost,
                 type: 'bar',
                 name: 'Material Cost',
-                marker: { color: '#6c757d' },
+                marker: { color: '#64748b' },
                 hovertemplate: data.periods.map((period, i) => {
                     const pct = data.sales[i] ? ((data.material_cost[i] || 0) / data.sales[i] * 100).toFixed(1) : 0;
                     return `Material Cost: %{y:,.0f} Cr (<b>${pct}%</b>)<extra></extra>`;
@@ -390,7 +390,7 @@ const ChartsModule = (function() {
                 y: otherExpenses,
                 type: 'bar',
                 name: 'Operating Expenses',
-                marker: { color: '#fd7e14' },
+                marker: { color: '#f59e0b' },
                 hovertemplate: data.periods.map((period, i) => {
                     const pct = data.sales[i] ? (otherExpenses[i] / data.sales[i] * 100).toFixed(1) : 0;
                     return `Operating Expenses: ${otherExpenses[i].toFixed(0)} Cr (<b>${pct}%</b>)<extra></extra>`;
@@ -405,7 +405,7 @@ const ChartsModule = (function() {
                 y: data.depreciation,
                 type: 'bar',
                 name: 'Depreciation',
-                marker: { color: '#6f42c1' },
+                marker: { color: '#8b5cf6' },
                 hovertemplate: data.periods.map((period, i) => {
                     const pct = data.sales[i] ? ((data.depreciation[i] || 0) / data.sales[i] * 100).toFixed(1) : 0;
                     return `Depreciation: %{y:,.0f} Cr (<b>${pct}%</b>)<extra></extra>`;
@@ -420,7 +420,7 @@ const ChartsModule = (function() {
                 y: data.interest,
                 type: 'bar',
                 name: 'Interest',
-                marker: { color: '#dc3545' },
+                marker: { color: '#ef4444' },
                 hovertemplate: data.periods.map((period, i) => {
                     const pct = data.sales[i] ? ((data.interest[i] || 0) / data.sales[i] * 100).toFixed(1) : 0;
                     return `Interest: %{y:,.0f} Cr (<b>${pct}%</b>)<extra></extra>`;
@@ -435,7 +435,7 @@ const ChartsModule = (function() {
                 y: taxAmount,
                 type: 'bar',
                 name: 'Tax',
-                marker: { color: '#ffc107' },
+                marker: { color: '#fbbf24' },
                 hovertemplate: data.periods.map((period, i) => {
                     const pct = data.sales[i] ? (taxAmount[i] / data.sales[i] * 100).toFixed(1) : 0;
                     return `Tax: ${taxAmount[i].toFixed(0)} Cr (<b>${pct}%</b>)<extra></extra>`;
@@ -450,7 +450,7 @@ const ChartsModule = (function() {
                 y: data.net_profit,
                 type: 'bar',
                 name: 'Net Profit',
-                marker: { color: '#198754' },
+                marker: { color: '#10b981' },
                 hovertemplate: data.periods.map((period, i) => {
                     const pct = data.sales[i] ? ((data.net_profit[i] || 0) / data.sales[i] * 100).toFixed(1) : 0;
                     return `Net Profit: %{y:,.0f} Cr (<b>${pct}%</b>)<extra></extra>`;
@@ -500,7 +500,7 @@ const ChartsModule = (function() {
             type: 'bar',
             name: 'Cash from Operations',
             marker: {
-                color: data.cash_from_operations.map(v => v >= 0 ? '#198754' : '#dc3545')
+                color: data.cash_from_operations.map(v => v >= 0 ? '#10b981' : '#ef4444')
             },
             hovertemplate: '<b>%{x}</b><br>Cash from Operations: %{y:,.0f} Cr<extra></extra>'
         };
@@ -531,7 +531,7 @@ const ChartsModule = (function() {
             const container = document.getElementById(containerId);
             if (container) {
                 container.innerHTML = `
-                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                    <div class="d-flex align-items-center justify-content-center h-100" style="color: #64748b;">
                         <div class="text-center">
                             <i class="bi bi-people fs-1 mb-2 d-block"></i>
                             <p class="mb-0">Shareholding pattern data not available for this company</p>
@@ -545,11 +545,11 @@ const ChartsModule = (function() {
         setContainerWidth(containerId, data.periods.length);
 
         const categories = [
-            { key: 'promoters', name: 'Promoters', color: '#0d6efd' },
-            { key: 'fiis', name: 'FIIs', color: '#198754' },
-            { key: 'diis', name: 'DIIs', color: '#fd7e14' },
-            { key: 'government', name: 'Government', color: '#6f42c1' },
-            { key: 'public', name: 'Public', color: '#dc3545' }
+            { key: 'promoters', name: 'Promoters', color: '#6366f1' },
+            { key: 'fiis', name: 'FIIs', color: '#10b981' },
+            { key: 'diis', name: 'DIIs', color: '#f59e0b' },
+            { key: 'government', name: 'Government', color: '#8b5cf6' },
+            { key: 'public', name: 'Public', color: '#ef4444' }
         ];
 
         const traces = [];

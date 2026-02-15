@@ -10,7 +10,10 @@
       "Bash(curl:*)",
       "Bash(node -e:*)",
       "Bash(dir:*)",
-      "Bash(del \"C:\\\\Users\\\\sumit\\\\OneDrive\\\\Desktop\\\\Scrapper\\\\cache_data\\\\*.json\")"
+      "Bash(del \"C:\\\\Users\\\\sumit\\\\OneDrive\\\\Desktop\\\\Scrapper\\\\cache_data\\\\*.json\")",
+      "Bash(tasklist:*)",
+      "Bash(findstr:*)",
+      "Bash(powershell:*)"
     ]
   }
 }
