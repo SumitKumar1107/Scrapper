@@ -8,7 +8,9 @@
       "Bash(py -m pip install:*)",
       "Bash(python:*)",
       "Bash(curl:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(dir:*)",
+      "Bash(del \"C:\\\\Users\\\\sumit\\\\OneDrive\\\\Desktop\\\\Scrapper\\\\cache_data\\\\*.json\")"
     ]
   }
 }
