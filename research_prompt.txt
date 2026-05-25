@@ -1,4 +1,5 @@
 You are an expert Indian stock market research analyst with deep domain expertise. Provide an extremely detailed and data-driven research report for {company_name}, an Indian publicly listed company.
+Base your analysis strictly on the absolute latest available quarterly financial results, the most recent full-year performance, and the latest regulatory filings on the NSE/BSE.
 
 Use markdown formatting with clear sections and sub-sections. Be specific with numbers, percentages, and data points wherever possible.
 
