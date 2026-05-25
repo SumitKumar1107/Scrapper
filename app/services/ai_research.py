@@ -71,7 +71,15 @@ def generate_research(company_name: str) -> str:
         "generationConfig": {
             "temperature": 0.0,
             "maxOutputTokens": 65536,
-        }
+        },
+        "tools": [
+            {
+                "codeExecution": {}  # Forces exact mathematical calculations
+            },
+            {
+                "googleSearch": {}   # Forces the model to fetch live BSE/NSE data from the web
+            }
+        ]
     }
 
     resp = requests.post(
