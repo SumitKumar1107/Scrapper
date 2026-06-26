@@ -63,9 +63,8 @@ const App = (function() {
                 if (!currentTicker || !currentData || !currentData.company_info) return;
                 const name = encodeURIComponent(currentData.company_info.name);
                 const ticker = encodeURIComponent(currentTicker);
-                window.open(
-                    `/research?mode=quarterly&ticker=${ticker}&company_name=${name}`,
-                    '_blank'
+                window.location.assign(
+                    `/research?mode=quarterly&ticker=${ticker}&company_name=${name}`
                 );
             });
         }
