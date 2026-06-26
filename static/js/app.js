@@ -57,17 +57,6 @@ const App = (function() {
             });
         }
 
-        const quarterlyResearchBtn = document.getElementById('quarterly-research-btn');
-        if (quarterlyResearchBtn) {
-            quarterlyResearchBtn.addEventListener('click', function() {
-                if (!currentTicker || !currentData || !currentData.company_info) return;
-                const name = encodeURIComponent(currentData.company_info.name);
-                const ticker = encodeURIComponent(currentTicker);
-                window.location.assign(
-                    `/research?mode=quarterly&ticker=${ticker}&company_name=${name}`
-                );
-            });
-        }
         checkUrlParams();
     }
 
@@ -148,6 +137,14 @@ const App = (function() {
      * Render company information
      */
     function renderCompanyInfo(info) {
+        const quarterlyResearchLink = document.getElementById('quarterly-research-btn');
+        if (quarterlyResearchLink) {
+            const ticker = encodeURIComponent(info.ticker || currentTicker);
+            const name = encodeURIComponent(info.name);
+            quarterlyResearchLink.href =
+                `/research?mode=quarterly&ticker=${ticker}&company_name=${name}`;
+        }
+
         // Company name and ticker
         document.getElementById('company-name').textContent = info.name || '';
         document.getElementById('company-ticker').textContent = info.ticker || '';
