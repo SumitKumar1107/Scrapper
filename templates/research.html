@@ -41,7 +41,8 @@
                     <span class="chart-icon chart-icon-amber me-2">
                         <i class="bi bi-robot"></i>
                     </span>
-                    AI Research - <span id="company-name" class="ms-1"></span>
+                    <span id="report-label">AI Research</span> -
+                    <span id="company-name" class="ms-1"></span>
                 </h5>
                 <div class="d-flex align-items-center gap-2">
                     <button id="download-pdf-btn" class="refresh-btn d-none" title="Save as PDF">
@@ -60,7 +61,7 @@
                     </div>
                     <p class="mt-3" style="color: var(--text-muted);">
                         <i class="bi bi-hourglass-split me-1"></i>
-                        Generating AI analysis... This may take a few seconds.
+                        <span id="loading-message">Generating AI analysis... This may take a few seconds.</span>
                     </p>
                 </div>
                 <!-- Error -->
@@ -110,9 +111,16 @@
         const params = new URLSearchParams(window.location.search);
         const ticker = params.get('ticker');
         const companyName = params.get('company_name');
+        const reportMode = params.get('mode');
+        const isQuarterly = reportMode === 'quarterly';
+        const reportLabel = isQuarterly ? 'Quarterly AI Analysis' : 'AI Research';
 
         document.getElementById('company-name').textContent = companyName || ticker || '';
-        document.title = 'AI Research - ' + (companyName || ticker || '');
+        document.getElementById('report-label').textContent = reportLabel;
+        document.getElementById('loading-message').textContent = isQuarterly
+            ? 'Analyzing the latest available quarterly result...'
+            : 'Generating AI analysis... This may take a few seconds.';
+        document.title = reportLabel + ' - ' + (companyName || ticker || '');
 
         const loadingEl = document.getElementById('loading');
         const errorEl = document.getElementById('error');
@@ -138,7 +146,7 @@
                     throw new Error('PDF libraries not loaded. Please reload the page.');
                 }
 
-                var filename = (companyName || ticker || 'Research') + ' - AI Research.pdf';
+                var filename = (companyName || ticker || 'Research') + ' - ' + reportLabel + '.pdf';
 
                 // Create visible wrapper for html2canvas capture
                 wrapper = document.createElement('div');
@@ -146,7 +154,7 @@
 
                 wrapper.innerHTML =
                     '<h1 style="font-size:22px;color:#1e293b;margin:0 0 4px 0;">' +
-                        (companyName || ticker || '') + ' - AI Research Report' +
+                        (companyName || ticker || '') + ' - ' + reportLabel +
                     '</h1>' +
                     '<p style="font-size:11px;color:#64748b;margin:0 0 16px 0;">Generated: ' +
                         (generatedAtEl.textContent || new Date().toLocaleDateString()) +
@@ -228,7 +236,8 @@
             downloadBtn.classList.add('d-none');
 
             try {
-                let url = '/api/research/' + encodeURIComponent(ticker)
+                let endpoint = isQuarterly ? '/api/quarterly-research/' : '/api/research/';
+                let url = endpoint + encodeURIComponent(ticker)
                     + '?company_name=' + encodeURIComponent(companyName);
                 if (refresh) url += '&refresh=true';
 

@@ -57,7 +57,18 @@ const App = (function() {
             });
         }
 
-        // Check URL for initial company
+        const quarterlyResearchBtn = document.getElementById('quarterly-research-btn');
+        if (quarterlyResearchBtn) {
+            quarterlyResearchBtn.addEventListener('click', function() {
+                if (!currentTicker || !currentData || !currentData.company_info) return;
+                const name = encodeURIComponent(currentData.company_info.name);
+                const ticker = encodeURIComponent(currentTicker);
+                window.open(
+                    `/research?mode=quarterly&ticker=${ticker}&company_name=${name}`,
+                    '_blank'
+                );
+            });
+        }
         checkUrlParams();
     }
 

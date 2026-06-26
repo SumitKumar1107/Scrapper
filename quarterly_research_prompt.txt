@@ -1,0 +1,165 @@
+Act as a senior Indian equity research analyst.
+
+Analyze the latest available quarterly results of {company_name} ({ticker}).
+
+Use the structured financial data supplied below as the numerical foundation.
+Supplement it with the company's official quarterly results, investor
+presentation, earnings-call transcript, stock-exchange filings, and other
+reliable public sources. Clearly state the quarter being analyzed.
+
+Latest available quarter:
+{latest_quarter}
+
+Immediately previous quarter:
+{previous_quarter}
+
+Same quarter one year earlier:
+{year_ago_quarter}
+
+Recent quarterly history (up to eight quarters, chronological):
+{quarterly_history}
+
+All supplied monetary values are in INR crore unless the field indicates a
+percentage or EPS. A null value means the source did not provide that metric.
+
+## 1. Quarterly Result Summary
+
+Explain how the company performed during the latest quarter. Analyze:
+
+- Revenue
+- EBITDA or operating profit
+- EBITDA or operating margin
+- Profit before tax
+- Net profit
+- EPS
+- Cash flow, debt, and working capital where available
+
+Compare every relevant metric:
+
+- YoY: latest quarter versus the same quarter last year
+- QoQ: latest quarter versus the immediately previous quarter
+
+For every material change, explain why it happened. Clearly separate
+management's explanation from your own analysis or inference.
+
+## 2. Management Commentary
+
+Analyze management's latest commentary from the earnings call, investor
+presentation, result announcement, or stock-exchange filing.
+
+Cover, where relevant:
+
+- Demand and industry conditions
+- Pricing and volume trends
+- Input costs and margins
+- Capacity utilization
+- Capital expenditure
+- Order book, deal wins, or pipeline
+- New products and business segments
+- Geographic performance
+- Management guidance
+- Risks and challenges
+
+Identify any important change in management tone or guidance compared with the
+previous quarter.
+
+## 3. Business-Specific KPIs
+
+First identify the KPIs that matter most for this company's industry and
+business model. Analyze those KPIs YoY and QoQ.
+
+Relevant KPIs may include volume, realization, capacity utilization, order
+book, order inflow, customer additions, ARPU, same-store sales growth,
+occupancy, assets under management, net interest margin, asset quality, credit
+cost, deal wins, attrition, subscriber growth, or other industry-specific
+measures.
+
+Use only KPIs relevant to this company. For every material KPI change, explain
+the reason using management commentary and reported disclosures. Write "not
+disclosed" when a required KPI is unavailable.
+
+## 4. Competitor Comparison
+
+Identify the company's five closest listed competitors based on business
+segments, product mix, customer market, and operating scale.
+
+Check whether each competitor has released results for a comparable latest
+quarter. For competitors with available results, compare:
+
+- Revenue growth
+- EBITDA or operating-profit growth
+- Margin movement
+- Net-profit growth
+- Management outlook
+
+Also compare every company using the most important business-specific KPIs
+identified in Section 3. Use the same KPI definitions across peers wherever
+possible. For an IT-services company, for example, this should include relevant
+measures such as constant-currency growth, total contract value or deal wins,
+attrition, utilization, employee count, client additions, geographic growth,
+and segment growth when disclosed. Select different KPIs when the company
+belongs to another industry.
+
+Present two Markdown tables:
+
+1. Financial comparison with reporting period, revenue growth, operating-profit
+   growth, margin and margin change, net-profit growth, and outlook.
+2. Business KPI comparison with one row per company and columns for the most
+   important comparable KPIs. Include YoY and QoQ movement for each KPI when
+   disclosed.
+
+For the KPI comparison:
+
+- Explain which peer leads and lags on each important KPI.
+- Compare {company_name} with the peer median or peer average where enough
+  comparable data is available.
+- Highlight whether each KPI gap is improving or worsening.
+- Explain the operational reason behind material KPI differences using official
+  management commentary.
+- Mark unavailable or non-comparable values as "not disclosed" or "not
+  comparable"; never estimate them.
+
+State each competitor's reporting period and KPI definition. Do not compare
+non-equivalent periods or differently defined KPIs without clearly disclosing
+the difference.
+
+Then explain:
+
+- Which company delivered the strongest result?
+- Which company showed the best growth and margin performance?
+- Is {company_name} gaining or losing relative momentum?
+- Is {company_name} gaining or losing ground on its most important business
+  KPIs?
+- What explains the major differences?
+
+If fewer than five competitors have released comparable results, include only
+those available and explicitly state the limitation.
+
+## 5. Positives and Concerns
+
+List the most important data-supported positives and concerns from the latest
+result.
+
+## 6. Overall Assessment
+
+Classify the quarter as Strong, Positive, Mixed, Weak, or Not Comparable.
+Explain the classification and state what should be monitored during the next
+quarter.
+
+## Research Rules
+
+- Use the most recent information available.
+- Prioritize official company and stock-exchange sources.
+- Cite the source and reporting period for important external claims.
+- Treat the supplied structured data as authoritative for its reported fields.
+- Do not invent missing figures, KPIs, commentary, competitors, or reasons.
+- Clearly write "not disclosed" when information is unavailable.
+- Distinguish reported facts, management explanations, and your own inference.
+- Calculate changes from the supplied values when they are available.
+- Round percentage changes to one decimal place.
+- Express margin changes in basis points, where 100 basis points equals one
+  percentage point.
+- Avoid double-counting exceptional or one-time items.
+- Explicitly say when a QoQ or YoY comparison is unavailable.
+- Do not provide a buy, sell, hold, target price, or investment recommendation.
+- End with: "This is an AI-generated result analysis, not financial advice."
