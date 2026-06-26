@@ -83,8 +83,20 @@ disclosed" when a required KPI is unavailable.
 Identify the company's five closest listed competitors based on business
 segments, product mix, customer market, and operating scale.
 
-Check whether each competitor has released results for a comparable latest
-quarter. For competitors with available results, compare:
+Before comparing performance, create a result-availability table covering all
+five selected competitors. For each competitor show:
+
+- Latest quarter expected or relevant for comparison
+- Latest quarter actually reported
+- Result status: Released, Not Yet Released, or Not Comparable
+- Official source used to verify the status
+
+Do not silently substitute an older quarter when the comparable latest result
+has not been released. A competitor whose result is Not Yet Released or Not
+Comparable must remain visible in the availability table but must be excluded
+from performance rankings, peer averages, and peer medians.
+
+For competitors with a released and comparable result, compare:
 
 - Revenue growth
 - EBITDA or operating-profit growth
@@ -133,7 +145,16 @@ Then explain:
 - What explains the major differences?
 
 If fewer than five competitors have released comparable results, include only
-those available and explicitly state the limitation.
+those available in the financial and KPI comparison tables. Explicitly state
+how many of the five peers were included and list the excluded peers with the
+reason for exclusion.
+
+If no competitor has released a comparable result, do not manufacture a peer
+comparison. Show the availability table, state that a meaningful comparison is
+not yet possible, and analyze {company_name} on a standalone basis.
+
+If only one or two competitors have released comparable results, label the peer
+sample as limited and avoid broad industry conclusions.
 
 ## 5. Positives and Concerns
 

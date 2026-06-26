@@ -94,7 +94,7 @@ def get_quarterly_research(
 ):
     """Generate Gemini analysis of the latest available quarterly result."""
     ticker = ticker.upper().strip()
-    cache_key = f"quarterly-research-v3:{ticker}"
+    cache_key = f"quarterly-research-v4:{ticker}"
 
     if not refresh:
         cached = cache.get(cache_key)
